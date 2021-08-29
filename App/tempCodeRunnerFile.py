@@ -1,0 +1,1 @@
+print(lt.size(hola))

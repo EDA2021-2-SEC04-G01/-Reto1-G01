@@ -52,9 +52,9 @@ def initCatalog():
     
     return controller.initCatalog()
 
-
+catalog = None
 """
-Menu principal
+Menu principal 
 """
 
 while True:
@@ -62,6 +62,9 @@ while True:
     inputs = input('Seleccione una opción para continuar: ')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        catalog = initCatalog()
+        hola = controller.loadArtists(catalog)
+        print(lt.size(hola))
 
     elif int(inputs[0]) == 2:
         anio_inicio=int(input("Escriba el año de inicio: "))

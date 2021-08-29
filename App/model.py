@@ -39,17 +39,45 @@ los mismos.
 
 def newCatalog():
     catalog = {
-        'artworks':lt.newList(),
-        'artists':None,
-        'artistsYears':None,
-        'artworksYears':None,
-        'artistsNationalities':None
+        'artworks':lt.newList('SINGLE_LINKED'),
+        'artists':lt.newList('SINGLE_LINKED'),
+        'dates':lt.newList('SINGLE_LINKED'),
+        'artworksDates':lt.newList('SINGLE_LINKED')
     }   
     return catalog
 # Funciones para agregar informacion al catalogo
 
+def addArtist(catalog,artist):
+    lt.addLast(catalog['artists'],artist)
+
+    dates= artist['BeginDate'].split(',')
+
+    for date in dates:
+         addArtistDate(catalog,date.strip(),artist)
+
+def addArtistDate(catalog, Artistdate,artist):
+    dates=catalog['dates']
+    posDate=lt.isPresent(dates, Artistdate)
+
+    if posDate>0:
+        date = lt.getElement(dates,posDate)
+    else:
+        date = newDate(Artistdate)
+        lt.addLast(dates,date)
+    lt.addLast(date['artist'],artist)
+
 # Funciones para creacion de datos
 
+def newDate(date):
+    """
+    Crea una nueva estructura para modelar los libros de
+    un autor y su promedio de ratings
+    """
+    date = {'date': None, "artist": None,  "artwork": None}
+    date['name'] = date
+    date['artist'] = lt.newList('SINGLE_LINKED')
+    date['artwork'] = lt.newList('SINGLE_LINKED')
+    return date
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
