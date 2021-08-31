@@ -63,8 +63,10 @@ while True:
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
-        hola = controller.loadArtists(catalog)
-        print(lt.size(hola))
+        controller.loadArtists(catalog)
+        controller.loadArtworks(catalog)
+        print(catalog)
+
 
     elif int(inputs[0]) == 2:
         anio_inicio=int(input("Escriba el año de inicio: "))

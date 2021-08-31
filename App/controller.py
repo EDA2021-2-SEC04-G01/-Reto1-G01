@@ -50,7 +50,10 @@ def loadArtists(catalog):
         
 
 def loadArtworks(catalog):
-    pass
+    artworkFile=cf.data_dir+"Artworks-utf8-small.csv"
+    input_file = csv.DictReader(open(artworkFile, encoding='utf-8'))
+    for artwork in input_file:
+        model.addArtwork(catalog,artwork)
 
 
 # Funciones de ordenamiento

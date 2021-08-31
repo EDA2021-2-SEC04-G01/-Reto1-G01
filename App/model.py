@@ -39,8 +39,8 @@ los mismos.
 
 def newCatalog():
     catalog = {
-        'artworks':lt.newList('SINGLE_LINKED'),
-        'artists':lt.newList('SINGLE_LINKED'),
+        'artworks':lt.newList('SINGLE_LINKED',cmpfunction=None),
+        'artists':lt.newList('SINGLE_LINKED',cmpfunction=compareArtists),
         'dates':lt.newList('SINGLE_LINKED'),
         'artworksDates':lt.newList('SINGLE_LINKED')
     }   
@@ -55,6 +55,10 @@ def addArtist(catalog,artist):
     for date in dates:
          addArtistDate(catalog,date.strip(),artist)
 
+def addArtwork(catalog,artwork):
+    lt.addLast(catalog['artworks'],artwork)
+
+
 def addArtistDate(catalog, Artistdate,artist):
     dates=catalog['dates']
     posDate=lt.isPresent(dates, Artistdate)
@@ -66,7 +70,15 @@ def addArtistDate(catalog, Artistdate,artist):
         lt.addLast(dates,date)
     lt.addLast(date['artist'],artist)
 
+# def addArtWorks(catalog,Artworks,artw)
+
 # Funciones para creacion de datos
+
+def newArtist(artistName):
+    artist = {'name': "", "dates": None}
+    artist['name'] = artistName
+    return artist
+
 
 def newDate(date):
     """
@@ -81,5 +93,11 @@ def newDate(date):
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
+
+def compareArtists(artist1,artist):
+    if(artist1.lower() in artist['DisplayName']):
+        return 0
+    return -1
 
 # Funciones de ordenamiento
