@@ -63,15 +63,38 @@ while True:
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
-        controller.loadArtists(catalog)
-        controller.loadArtworks(catalog)
-        print(catalog)
+        controller.loadData(catalog)
+        print('Número de artistas cargados:' + str(lt.size(catalog['artists'])))
+        print('Últimos 3 artistas: ') 
+        for pos in range(lt.size(catalog['artists'])-3,lt.size(catalog['artists'])+1):
+            print(lt.getElement(catalog['artists'],pos))
+
+        print('Número de obras cargadas: ' + str(lt.size(catalog['artworks'])))
+        print('Últimas 3 obras: ') 
+        for pos in range(lt.size(catalog['artworks'])-3,lt.size(catalog['artworks'])+1):
+            print(lt.getElement(catalog['artworks'],pos))
+        
+        
+        
 
 
     elif int(inputs[0]) == 2:
         anio_inicio=int(input("Escriba el año de inicio: "))
         anio_fin=int(input("Escriba el año final: "))
+        # posInicio = lt.isPresent(catalog['dates'],str(anio_inicio))
+        # posFin = lt.isPresent(catalog['dates'],str(anio_fin))
+
+        # respuesta=controller.getCronoArtists(catalog,posInicio,posFin)
+        # print(respuesta)
         
+        #print(respuesta)
+       # print(controller.getCronoArtists(catalog,posInicio,posFin))
+        # print(type(resultado))
+        
+      #  pos=lt.isPresent(catalog['dates'],str(anio_inicio))
+      #  print(lt.getElement(catalog['dates'],pos))
+
+
 
 
     elif int(inputs[0]) == 3:

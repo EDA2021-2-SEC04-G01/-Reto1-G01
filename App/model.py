@@ -41,63 +41,108 @@ def newCatalog():
     catalog = {
         'artworks':lt.newList('SINGLE_LINKED',cmpfunction=None),
         'artists':lt.newList('SINGLE_LINKED',cmpfunction=compareArtists),
-        'dates':lt.newList('SINGLE_LINKED'),
-        'artworksDates':lt.newList('SINGLE_LINKED')
+        'technique':lt.newList('SINGLE_LINKED')
+        # 'dates':lt.newList('SINGLE_LINKED',cmpfunction=compareDates),
+        # 'artworksDates':lt.newList('SINGLE_LINKED',cmpfunction=compareArtworkDates)
     }   
     return catalog
 # Funciones para agregar informacion al catalogo
 
 def addArtist(catalog,artist):
     lt.addLast(catalog['artists'],artist)
-
     dates= artist['BeginDate'].split(',')
 
-    for date in dates:
-         addArtistDate(catalog,date.strip(),artist)
+"""    for date in dates:
+
+        # hola(catalog,date,artist)
+        addArtistDate(catalog,date,artist)"""
+
+    # for date in dates:
+    #       addArtistDate(catalog,date.strip(),artist)
 
 def addArtwork(catalog,artwork):
     lt.addLast(catalog['artworks'],artwork)
+    dates = artwork['DateAcquired'].split(',')
+
+"""    for date in dates:
+        addArtworkDate(catalog,date,artwork)
+"""
 
 
-def addArtistDate(catalog, Artistdate,artist):
-    dates=catalog['dates']
-    posDate=lt.isPresent(dates, Artistdate)
 
+"""def addArtistDate(catalog,date,artist):
+    data=catalog['dates']
+
+    posDate=lt.isPresent(data,date)
     if posDate>0:
-        date = lt.getElement(dates,posDate)
+        fecha=lt.getElement(data,posDate)
     else:
-        date = newDate(Artistdate)
-        lt.addLast(dates,date)
-    lt.addLast(date['artist'],artist)
+        fecha = newDate(date)
+        lt.addLast(data,fecha)
+    lt.addLast(fecha['artists'],artist)"""
+
+"""def addArtworkDate(catalog,date,artwork):
+    data=catalog['artworksDates']
+
+    posDate = lt.isPresent(data,date)
+    if posDate>0:
+        fecha=lt.getElement(data,posDate)
+    else:
+        fecha=newArtworkDate(date)
+        lt.addLast(data,fecha)
+    lt.addLast(fecha['artworks'],artwork)"""
+
+
 
 # def addArtWorks(catalog,Artworks,artw)
 
 # Funciones para creacion de datos
 
-def newArtist(artistName):
-    artist = {'name': "", "dates": None}
-    artist['name'] = artistName
-    return artist
+"""def newDate(datee):
 
-
-def newDate(date):
-    """
-    Crea una nueva estructura para modelar los libros de
-    un autor y su promedio de ratings
-    """
-    date = {'date': None, "artist": None,  "artwork": None}
-    date['name'] = date
-    date['artist'] = lt.newList('SINGLE_LINKED')
-    date['artwork'] = lt.newList('SINGLE_LINKED')
+    date = {'artistDate': '', "artists": None}
+    date['artistDate'] = datee
+    date['artists'] = lt.newList('SINGLE_LINKED')
     return date
+
+def newArtworkDate(datee):
+    date = {'artworksDate': '', "artworks": None}
+    date['artworksDate'] = datee
+    date['artworks'] = lt.newList('SINGLE_LINKED')
+    return date
+
 # Funciones de consulta
+def getCronoArtists(catalog,inicio,fin):
+    fechas=catalog['dates']
+    resultado=lt.newList()
 
+    for cont in range(inicio,fin):
+ 
+        artists = lt.getElement(fechas,cont)
+        lt.addLast(resultado,artists['artists'])
+
+
+    return resultado"""
 # Funciones utilizadas para comparar elementos dentro de una lista
-
 
 def compareArtists(artist1,artist):
     if(artist1.lower() in artist['DisplayName']):
         return 0
     return -1
 
+"""def compareDates(fecha1,artist):
+    if(fecha1 in artist['artistDate']):
+        return 0
+    return -1"""
+
+"""def compareArtworkDates(fechaArt,artwork):
+    if(fechaArt in artwork['artworksDate']):
+        return 0
+    return -1"""
+
+def compareFechas(fecha1,fecha2):
+    return (fecha1['artistDate']<fecha2['artistDate'])
 # Funciones de ordenamiento
+
+"""def sortDates(catalog):
+    sa.sort(catalog['dates'],compareFechas)"""
