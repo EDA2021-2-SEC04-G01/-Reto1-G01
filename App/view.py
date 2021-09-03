@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
-
+import model
 import config as cf
 import sys
 import controller
@@ -81,6 +81,8 @@ while True:
     elif int(inputs[0]) == 2:
         anio_inicio=int(input("Escriba el año de inicio: "))
         anio_fin=int(input("Escriba el año final: "))
+        cosa=(model.cronoArtist(catalog,anio_inicio,anio_fin))
+        print(cosa)
         # posInicio = lt.isPresent(catalog['dates'],str(anio_inicio))
         # posFin = lt.isPresent(catalog['dates'],str(anio_fin))
 

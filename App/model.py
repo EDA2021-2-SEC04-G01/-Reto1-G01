@@ -151,13 +151,16 @@ def sortDates(catalog):
 def cronoArtist(catalog, inicio, fin):
 
     FiltredList=lt.newList()
-    for artist in catalog["artist"]:
-
+    for cont in range(lt.size(catalog['artists'])):
+        artist=(lt.getElement(catalog['artists'],cont))
+ 
         if int(artist["BeginDate"]) in range(inicio,fin+1):
+    
             lt.addLast(FiltredList,artist)
         elif int(artist["BeginDate"]) > fin:
             break
     
+    return FiltredList
     if lt.isEmpty(FiltredList)==0:
         return "No hay artistas en el rango indicado"
     else:

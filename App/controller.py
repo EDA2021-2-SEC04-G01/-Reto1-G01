@@ -63,6 +63,9 @@ def loadArtworks(catalog):
 def sortDates(catalog):
     model.sortDates(catalog)
 
+def cronoArtist(catalog,inicio,fin):
+    return model.cronoArtist(catalog,inicio,fin)
+
 # Funciones de consulta sobre el catálogo
 """def getCronoArtists(catalog,inicio,fin):
     resultado=model.getCronoArtists(catalog,inicio,fin)
