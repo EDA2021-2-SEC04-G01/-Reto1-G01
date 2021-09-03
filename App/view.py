@@ -83,18 +83,7 @@ while True:
         anio_fin=int(input("Escriba el año final: "))
         cosa=(model.cronoArtist(catalog,anio_inicio,anio_fin))
         print(cosa)
-        # posInicio = lt.isPresent(catalog['dates'],str(anio_inicio))
-        # posFin = lt.isPresent(catalog['dates'],str(anio_fin))
 
-        # respuesta=controller.getCronoArtists(catalog,posInicio,posFin)
-        # print(respuesta)
-        
-        #print(respuesta)
-       # print(controller.getCronoArtists(catalog,posInicio,posFin))
-        # print(type(resultado))
-        
-      #  pos=lt.isPresent(catalog['dates'],str(anio_inicio))
-      #  print(lt.getElement(catalog['dates'],pos))
 
 
 

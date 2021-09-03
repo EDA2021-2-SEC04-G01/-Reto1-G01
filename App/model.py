@@ -160,8 +160,7 @@ def cronoArtist(catalog, inicio, fin):
         elif int(artist["BeginDate"]) > fin:
             break
     
-    return FiltredList
-    if lt.isEmpty(FiltredList)==0:
+    if lt.isEmpty(FiltredList):
         return "No hay artistas en el rango indicado"
     else:
         return FiltredList
