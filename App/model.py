@@ -146,3 +146,19 @@ def compareFechas(artist1,artist2):
 
 def sortDates(catalog):
     sa.sort(catalog['artists'],compareFechas)
+
+
+def cronoArtist(catalog, inicio, fin):
+
+    FiltredList=lt.newList()
+    for artist in catalog["artist"]:
+
+        if int(artist["BeginDate"]) in range(inicio,fin+1):
+            lt.addLast(FiltredList,artist)
+        elif int(artist["BeginDate"]) > fin:
+            break
+    
+    if lt.isEmpty(FiltredList)==0:
+        return "No hay artistas en el rango indicado"
+    else:
+        return FiltredList
