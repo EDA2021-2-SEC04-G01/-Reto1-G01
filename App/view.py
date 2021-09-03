@@ -66,12 +66,12 @@ while True:
         controller.loadData(catalog)
         print('Número de artistas cargados:' + str(lt.size(catalog['artists'])))
         print('Últimos 3 artistas: ') 
-        for pos in range(lt.size(catalog['artists'])-3,lt.size(catalog['artists'])+1):
+        for pos in range(lt.size(catalog['artists'])-2,lt.size(catalog['artists'])+1):
             print(lt.getElement(catalog['artists'],pos))
 
         print('Número de obras cargadas: ' + str(lt.size(catalog['artworks'])))
         print('Últimas 3 obras: ') 
-        for pos in range(lt.size(catalog['artworks'])-3,lt.size(catalog['artworks'])+1):
+        for pos in range(lt.size(catalog['artworks'])-2,lt.size(catalog['artworks'])+1):
             print(lt.getElement(catalog['artworks'],pos))
         
         
