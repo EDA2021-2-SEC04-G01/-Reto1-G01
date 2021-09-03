@@ -140,9 +140,9 @@ def compareArtists(artist1,artist):
         return 0
     return -1"""
 
-def compareFechas(fecha1,fecha2):
-    return (fecha1['artistDate']<fecha2['artistDate'])
+def compareFechas(artist1,artist2):
+    return (artist1['BeginDate']<artist2['BeginDate'])
 # Funciones de ordenamiento
 
-"""def sortDates(catalog):
-    sa.sort(catalog['dates'],compareFechas)"""
+def sortDates(catalog):
+    sa.sort(catalog['artists'],compareFechas)

@@ -40,7 +40,7 @@ def initCatalog():
 def loadData(catalog):
     loadArtists(catalog)
     loadArtworks(catalog)
-"""    sortDates(catalog)"""
+    sortDates(catalog)
 
 
 def loadArtists(catalog):
@@ -59,9 +59,9 @@ def loadArtworks(catalog):
 
 
 # Funciones de ordenamiento
-"""
+
 def sortDates(catalog):
-    model.sortDates(catalog)"""
+    model.sortDates(catalog)
 
 # Funciones de consulta sobre el catálogo
 """def getCronoArtists(catalog,inicio,fin):
