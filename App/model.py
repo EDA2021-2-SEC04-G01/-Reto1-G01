@@ -52,42 +52,10 @@ def addArtist(catalog,artist):
     lt.addLast(catalog['artists'],artist)
     dates= artist['BeginDate'].split(',')
 
-"""    for date in dates:
-
-        # hola(catalog,date,artist)
-        addArtistDate(catalog,date,artist)"""
-
-    # for date in dates:
-    #       addArtistDate(catalog,date.strip(),artist)
 
 def addArtwork(catalog,artwork):
     lt.addLast(catalog['artworks'],artwork)
     dates = artwork['DateAcquired'].split(',')
-
-
-"""def addArtistDate(catalog,date,artist):
-    data=catalog['dates']
-
-    posDate=lt.isPresent(data,date)
-    if posDate>0:
-        fecha=lt.getElement(data,posDate)
-    else:
-        fecha = newDate(date)
-        lt.addLast(data,fecha)
-    lt.addLast(fecha['artists'],artist)"""
-
-"""def addArtworkDate(catalog,date,artwork):
-    data=catalog['artworksDates']
-
-    posDate = lt.isPresent(data,date)
-    if posDate>0:
-        fecha=lt.getElement(data,posDate)
-    else:
-        fecha=newArtworkDate(date)
-        lt.addLast(data,fecha)
-    lt.addLast(fecha['artworks'],artwork)"""
-
-
 
 
 # Funciones para creacion de datos
@@ -101,8 +69,7 @@ def compareArtists(artistid,artist):
     return -1
 
 def compareArtworks(artwork1,artwork):
-    artId= artwork['ConstituentID']
-    if (artwork1.lower() in artId.lower()):
+    if (artwork1.lower() in artwork['ObjectID']):
         return 0
     return -1
 
@@ -110,10 +77,17 @@ def compareArtworks(artwork1,artwork):
 
 def compareFechas(artist1,artist2):
     return (artist1['BeginDate']<artist2['BeginDate'])
+
+def compareArtDates(art1,art2):
+    return (art1['DateAcquired']<art2['DateAcquired'])
+
 # Funciones de ordenamiento
 
 def sortDates(catalog):
     sa.sort(catalog['artists'],compareFechas)
+
+def sortArtworksDates(lista):
+    sa.sort(lista,compareArtDates)
 
 def compareNation(nation1,nation):
     if(nation1 in nation['nationality']):
@@ -137,6 +111,36 @@ def cronoArtist(catalog, inicio, fin):
     else:
         return FiltredList
 
+
+def cronoArtwork(catalog, inicio, fin):
+    inicio=int(inicio.replace('-',''))
+    fin=int(fin.replace('-',''))
+    FiltredList=lt.newList()
+    for cont in range(lt.size(catalog['artworks'])):
+        artwork=(lt.getElement(catalog['artworks'],cont))       
+        if artwork["DateAcquired"] == '':
+            continue
+
+        if int(artwork["DateAcquired"].replace('-','')) in range(inicio,fin+1):
+    
+            lt.addLast(FiltredList,artwork)
+       
+        elif int(artwork["DateAcquired"].replace('-','')) > fin:
+            break
+    
+    if lt.isEmpty(FiltredList):
+        return "No hay obras de arte en el rango indicado"
+    else:
+        sortArtworksDates(FiltredList)
+        return FiltredList
+
+
+
+
+
+
+
+
 def ordenNacionalidad(catalog):
     listado=[]
     artists = catalog['artists']
@@ -158,7 +162,7 @@ def ordenNacionalidad(catalog):
             addNation(catalog,nation,artwork)
 
     sortNation(catalog['nationalities'])
-    
+
     for pos in range(lt.size(catalog['nationalities'])):
         nacionalidad=(lt.getElement(catalog['nationalities'],pos)['nationality'])
         if nacionalidad not in listado:

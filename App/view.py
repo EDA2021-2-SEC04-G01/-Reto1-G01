@@ -90,7 +90,10 @@ while True:
 
     elif int(inputs[0]) == 3:
         fechaInicial=input("Introduzca la fecha inicial (AAAA-MM-DD): ")
-        fechaFinal=input("Introduzca la fecha inicial (AAAA-MM-DD): ")
+        fechaFinal=str(input("Introduzca la fecha final (AAAA-MM-DD): "))
+
+        cosa = model.cronoArtwork(catalog,fechaInicial,fechaFinal)
+        print(cosa)
 
     elif int(inputs[0]) == 4:
         artista = input("Escriba el nombre del artista: ")
@@ -129,9 +132,11 @@ while True:
                 'Medium':medium,
                 'Dimensions':dimensions
             }
-            lt.addLast(listaFinal,actual)
 
-        print(listaFinal)
+            print(actual)
+            #lt.addLast(listaFinal,actual)
+
+       # print(listaFinal)
 
 
     elif int(inputs[0]) == 6:
