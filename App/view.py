@@ -96,11 +96,43 @@ while True:
         artista = input("Escriba el nombre del artista: ")
 
     elif int(inputs[0]) == 5:
-        print(model.ordenNacionalidad(catalog))
-        # info = catalog['artists']
-        # pos=lt.isPresent(info,'39447')
-        # print(lt.getElement(info,pos))
-        # # print(info)
+        listaFinal= lt.newList()
+        
+        listadoNacionalidad=model.ordenNacionalidad(catalog)
+        nacionalidadesFull=catalog['nationalities']
+        nationMajor=(lt.getElement(nacionalidadesFull,1))['artworks']
+        catArtists=catalog['artists']
+
+        for position in range(lt.size(nationMajor)):
+            actual = lt.getElement(nationMajor,position)
+            title = (actual['Title'])
+            artists = []
+
+
+            idArtist = actual['ConstituentID'][1:len(actual['ConstituentID'])-1].split(',')
+            for AutID in idArtist:
+                AutID=AutID.strip()
+                artistPos = lt.isPresent(catArtists,AutID)
+                if artistPos == 0:
+                    continue
+                artist = (lt.getElement(catalog['artists'],artistPos))['DisplayName']
+                artists.append(artist)
+
+            date = actual['Date']
+            medium = actual['Medium']
+            dimensions = actual['Dimensions']
+
+            actual = {
+                'Title' : title,
+                'artist(s)':artists,
+                'Date':date,
+                'Medium':medium,
+                'Dimensions':dimensions
+            }
+            lt.addLast(listaFinal,actual)
+
+        print(listaFinal)
+
 
     elif int(inputs[0]) == 6:
         dpto=input("Escriba el departamento del museo: ")

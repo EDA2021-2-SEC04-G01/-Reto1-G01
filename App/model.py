@@ -138,8 +138,7 @@ def cronoArtist(catalog, inicio, fin):
         return FiltredList
 
 def ordenNacionalidad(catalog):
-
- 
+    listado=[]
     artists = catalog['artists']
     for cont in range(lt.size(catalog['artworks'])+1):
    
@@ -156,23 +155,20 @@ def ordenNacionalidad(catalog):
             artist = lt.getElement(artists,pos)
             nation = artist['Nationality']
 
-            nationalities = catalog['nationalities']
-            posnation = lt.isPresent(nationalities, nation)
-            if posnation > 0:
-                nation = lt.getElement(nationalities, posnation)
-      
-            else:
-                nation = newNation(nation)
-                lt.addLast(nationalities, nation)
-            lt.addLast(nation['artworks'], artwork['ObjectID'])
-
+            addNation(catalog,nation,artwork)
 
     sortNation(catalog['nationalities'])
-    return catalog['nationalities']
+    
+    for pos in range(lt.size(catalog['nationalities'])):
+        nacionalidad=(lt.getElement(catalog['nationalities'],pos)['nationality'])
+        if nacionalidad not in listado:
+            listado.append(nacionalidad)
+
+    return listado
 
 
 def newNation(nationality):
-    nation = {'nationality':nationality,'artworks':lt.newList('SINGLE_LINKED')}
+    nation = {'nationality':nationality,'artworks':lt.newList('SINGLE_LINKED',compareArtworks)}
     return nation
 
 def compareQuantity(nation1,nation2):
@@ -182,3 +178,22 @@ def sortNation(nationality):
     sa.sort(nationality,compareQuantity)
 
 
+def addNation(catalog,nation_original,artwork):
+
+    if nation_original=="":
+        nation_original="Nationality unknown"
+    added=[]
+    nationalities = catalog['nationalities']
+    posnation = lt.isPresent(nationalities, nation_original)
+    if posnation > 0:
+        nation = lt.getElement(nationalities, posnation)
+
+    else:
+        nation = newNation(nation_original)
+        lt.addLast(nationalities, nation)
+    
+        
+    if artwork['ObjectID'] not in added:
+        # print(artwork['ObjectID'])
+        lt.addLast(nation['artworks'], artwork)
+        added.append(artwork['ObjectID'])
