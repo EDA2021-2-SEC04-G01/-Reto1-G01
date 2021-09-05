@@ -95,10 +95,12 @@ while True:
     elif int(inputs[0]) == 4:
         artista = input("Escriba el nombre del artista: ")
 
-
     elif int(inputs[0]) == 5:
-        pass
-
+        print(model.ordenNacionalidad(catalog))
+        # info = catalog['artists']
+        # pos=lt.isPresent(info,'39447')
+        # print(lt.getElement(info,pos))
+        # # print(info)
 
     elif int(inputs[0]) == 6:
         dpto=input("Escriba el departamento del museo: ")

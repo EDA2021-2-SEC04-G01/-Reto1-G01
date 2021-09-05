@@ -39,14 +39,14 @@ los mismos.
 
 def newCatalog():
     catalog = {
-        'artworks':lt.newList('SINGLE_LINKED',cmpfunction=None),
+        'artworks':lt.newList('SINGLE_LINKED',cmpfunction=compareArtworks),
         'artists':lt.newList('SINGLE_LINKED',cmpfunction=compareArtists),
-        'technique':lt.newList('SINGLE_LINKED')
-        # 'dates':lt.newList('SINGLE_LINKED',cmpfunction=compareDates),
-        # 'artworksDates':lt.newList('SINGLE_LINKED',cmpfunction=compareArtworkDates)
+        'technique':lt.newList('SINGLE_LINKED'),
+        'nationalities': lt.newList('SINGLE_LINKED',cmpfunction=compareNation)
     }   
     return catalog
 # Funciones para agregar informacion al catalogo
+
 
 def addArtist(catalog,artist):
     lt.addLast(catalog['artists'],artist)
@@ -63,11 +63,6 @@ def addArtist(catalog,artist):
 def addArtwork(catalog,artwork):
     lt.addLast(catalog['artworks'],artwork)
     dates = artwork['DateAcquired'].split(',')
-
-"""    for date in dates:
-        addArtworkDate(catalog,date,artwork)
-"""
-
 
 
 """def addArtistDate(catalog,date,artist):
@@ -94,51 +89,24 @@ def addArtwork(catalog,artwork):
 
 
 
-# def addArtWorks(catalog,Artworks,artw)
 
 # Funciones para creacion de datos
 
-"""def newDate(datee):
 
-    date = {'artistDate': '', "artists": None}
-    date['artistDate'] = datee
-    date['artists'] = lt.newList('SINGLE_LINKED')
-    return date
-
-def newArtworkDate(datee):
-    date = {'artworksDate': '', "artworks": None}
-    date['artworksDate'] = datee
-    date['artworks'] = lt.newList('SINGLE_LINKED')
-    return date
-
-# Funciones de consulta
-def getCronoArtists(catalog,inicio,fin):
-    fechas=catalog['dates']
-    resultado=lt.newList()
-
-    for cont in range(inicio,fin):
- 
-        artists = lt.getElement(fechas,cont)
-        lt.addLast(resultado,artists['artists'])
-
-
-    return resultado"""
 # Funciones utilizadas para comparar elementos dentro de una lista
 
-def compareArtists(artist1,artist):
-    if(artist1.lower() in artist['DisplayName']):
+def compareArtists(artistid,artist):
+    if(artistid.lower() in artist['ConstituentID']):
         return 0
     return -1
 
-"""def compareDates(fecha1,artist):
-    if(fecha1 in artist['artistDate']):
+def compareArtworks(artwork1,artwork):
+    artId= artwork['ConstituentID']
+    if (artwork1.lower() in artId.lower()):
         return 0
-    return -1"""
+    return -1
 
-"""def compareArtworkDates(fechaArt,artwork):
-    if(fechaArt in artwork['artworksDate']):
-        return 0
-    return -1"""
+
 
 def compareFechas(artist1,artist2):
     return (artist1['BeginDate']<artist2['BeginDate'])
@@ -147,12 +115,16 @@ def compareFechas(artist1,artist2):
 def sortDates(catalog):
     sa.sort(catalog['artists'],compareFechas)
 
+def compareNation(nation1,nation):
+    if(nation1 in nation['nationality']):
+        return 0
+    return -1
 
 def cronoArtist(catalog, inicio, fin):
 
     FiltredList=lt.newList()
     for cont in range(lt.size(catalog['artists'])):
-        artist=(lt.getElement(catalog['artists'],cont))
+        artist=(lt.getElement(catalog['artists'],cont))       
  
         if int(artist["BeginDate"]) in range(inicio,fin+1):
     
@@ -164,3 +136,49 @@ def cronoArtist(catalog, inicio, fin):
         return "No hay artistas en el rango indicado"
     else:
         return FiltredList
+
+def ordenNacionalidad(catalog):
+
+ 
+    artists = catalog['artists']
+    for cont in range(lt.size(catalog['artworks'])+1):
+   
+        artwork = lt.getElement(catalog['artworks'],cont)
+        idArtist = artwork['ConstituentID'][1:len(artwork['ConstituentID'])-1].split(',')
+
+        for id in idArtist:
+            id=id.strip()
+            pos = lt.isPresent(artists,id)
+            
+            if pos==0:
+                continue
+
+            artist = lt.getElement(artists,pos)
+            nation = artist['Nationality']
+
+            nationalities = catalog['nationalities']
+            posnation = lt.isPresent(nationalities, nation)
+            if posnation > 0:
+                nation = lt.getElement(nationalities, posnation)
+      
+            else:
+                nation = newNation(nation)
+                lt.addLast(nationalities, nation)
+            lt.addLast(nation['artworks'], artwork['ObjectID'])
+
+
+    sortNation(catalog['nationalities'])
+    return catalog['nationalities']
+
+
+def newNation(nationality):
+    nation = {'nationality':nationality,'artworks':lt.newList('SINGLE_LINKED')}
+    return nation
+
+def compareQuantity(nation1,nation2):
+    return lt.size(nation1['artworks'])>lt.size(nation2['artworks'])
+
+def sortNation(nationality):
+    sa.sort(nationality,compareQuantity)
+
+
