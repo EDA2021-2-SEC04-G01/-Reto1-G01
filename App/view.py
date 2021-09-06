@@ -82,7 +82,25 @@ while True:
         anio_inicio=int(input("Escriba el año de inicio: "))
         anio_fin=int(input("Escriba el año final: "))
         cosa=(model.cronoArtist(catalog,anio_inicio,anio_fin))
-        print(cosa)
+        
+        
+        if lt.size(cosa)>=3:
+            
+            print('Primeros 3 artistas: ')
+            for pos in range(3):
+                print((lt.getElement(cosa,pos))['DisplayName'])
+
+            print('Últimos 3 artistas: ')
+            for pos in range(lt.size(cosa)-3,lt.size(cosa)):
+                print((lt.getElement(cosa,pos))['DisplayName'])
+        else:
+            print('Primeros y últimos 1 o 2 artistas: ')
+            for pos in range(lt.size(cosa)):
+                print((lt.getElement(cosa,pos))['DisplayName'])
+
+        
+        
+        #print(cosa)
 
 
 
@@ -93,25 +111,29 @@ while True:
         fechaFinal=str(input("Introduzca la fecha final (AAAA-MM-DD): "))
 
         cosa = model.cronoArtwork(catalog,fechaInicial,fechaFinal)
+        cantCompradas=str(cosa[1])
+        cosa=cosa[0]
+        print('total de obras en el rango ingresado: '+str(lt.size(cosa)))
         print(cosa)
+        print('Número total de obras adquiridas por compra '+cantCompradas)
 
     elif int(inputs[0]) == 4:
         artista = input("Escriba el nombre del artista: ")
 
     elif int(inputs[0]) == 5:
-        listaFinal= lt.newList()
-        
+       
+        listRetorno=lt.newList()
         listadoNacionalidad=model.ordenNacionalidad(catalog)
         nacionalidadesFull=catalog['nationalities']
         nationMajor=(lt.getElement(nacionalidadesFull,1))['artworks']
         catArtists=catalog['artists']
-
+        # print(listadoNacionalidad)
         for position in range(lt.size(nationMajor)):
             actual = lt.getElement(nationMajor,position)
             title = (actual['Title'])
             artists = []
 
-
+            
             idArtist = actual['ConstituentID'][1:len(actual['ConstituentID'])-1].split(',')
             for AutID in idArtist:
                 AutID=AutID.strip()
@@ -132,11 +154,9 @@ while True:
                 'Medium':medium,
                 'Dimensions':dimensions
             }
+            lt.addLast(listRetorno,actual)
+        print(listRetorno)
 
-            print(actual)
-            #lt.addLast(listaFinal,actual)
-
-       # print(listaFinal)
 
 
     elif int(inputs[0]) == 6:

@@ -86,8 +86,8 @@ def compareArtDates(art1,art2):
 def sortDates(catalog):
     sa.sort(catalog['artists'],compareFechas)
 
-def sortArtworksDates(lista):
-    sa.sort(lista,compareArtDates)
+def sortArtworksDates(catalog):
+    sa.sort(catalog['artworks'],compareArtDates)
 
 def compareNation(nation1,nation):
     if(nation1 in nation['nationality']):
@@ -113,32 +113,52 @@ def cronoArtist(catalog, inicio, fin):
 
 
 def cronoArtwork(catalog, inicio, fin):
+    purchasedCant=0
     inicio=int(inicio.replace('-',''))
     fin=int(fin.replace('-',''))
+    artists = catalog['artists']
     FiltredList=lt.newList()
-    for cont in range(lt.size(catalog['artworks'])):
-        artwork=(lt.getElement(catalog['artworks'],cont))       
+    for cont in range(lt.size(catalog['artworks'])+1):
+        artwork=(lt.getElement(catalog['artworks'],cont))   
+           
         if artwork["DateAcquired"] == '':
             continue
 
         if int(artwork["DateAcquired"].replace('-','')) in range(inicio,fin+1):
-    
-            lt.addLast(FiltredList,artwork)
+           
+            artistList=[]
+            idArtist = artwork['ConstituentID'][1:len(artwork['ConstituentID'])-1].split(',')
+     
+            for id in idArtist:
+                id=id.strip()
+                pos = lt.isPresent(artists,id)
+                
+                if pos==0:
+                    continue
+
+                artist =(lt.getElement(artists,pos))['DisplayName']
+                artistList.append(artist)
+
+            artworkFinal={'Title':artwork['Title'],
+                          'Artist(s)':artistList,
+                          'Date':artwork['Date'],
+                          'Medium':artwork['Medium'],
+                          'Dimensions':artwork['Dimensions'],
+                          'DateAcquired':artwork['DateAcquired']}
+            lt.addLast(FiltredList,artworkFinal)
+
+            
+            if ('purchase' in artwork['CreditLine'].lower()):
+                 print((artwork["DateAcquired"].replace('-',''))) 
+                 purchasedCant+=1
        
         elif int(artwork["DateAcquired"].replace('-','')) > fin:
-            break
+             break
     
     if lt.isEmpty(FiltredList):
         return "No hay obras de arte en el rango indicado"
     else:
-        sortArtworksDates(FiltredList)
-        return FiltredList
-
-
-
-
-
-
+        return (FiltredList,purchasedCant)        
 
 
 def ordenNacionalidad(catalog):
