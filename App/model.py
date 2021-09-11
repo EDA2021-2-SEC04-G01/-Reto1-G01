@@ -24,7 +24,7 @@
  * Dario Correal - Version inicial
  """
 
-
+import textwrap
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
@@ -39,10 +39,10 @@ los mismos.
 
 def newCatalog():
     catalog = {
-        'artworks':lt.newList('SINGLE_LINKED',cmpfunction=compareArtworks),
-        'artists':lt.newList('SINGLE_LINKED',cmpfunction=compareArtists),
-        'technique':lt.newList('SINGLE_LINKED'),
-        'nationalities': lt.newList('SINGLE_LINKED',cmpfunction=compareNation)
+        'artworks':lt.newList('ARRAY_LIST'),
+        'artists':lt.newList('ARRAY_LIST',cmpfunction=compareArtists),
+        'technique':lt.newList('ARRAY_LIST'),
+        'nationalities': lt.newList('ARRAY_LIST',cmpfunction=compareNation)
     }   
     return catalog
 # Funciones para agregar informacion al catalogo
@@ -64,12 +64,12 @@ def addArtwork(catalog,artwork):
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def compareArtists(artistid,artist):
-    if(artistid.lower() in artist['ConstituentID']):
+    if(str(artistid) == str(artist['ConstituentID'])):
         return 0
     return -1
 
 def compareArtworks(artwork1,artwork):
-    if (artwork1.lower() in artwork['ObjectID']):
+    if (str(artwork1) == str(artwork['ObjectID'])):
         return 0
     return -1
 
@@ -164,23 +164,26 @@ def cronoArtwork(catalog, inicio, fin):
 def ordenNacionalidad(catalog):
     listado=[]
     artists = catalog['artists']
-    for cont in range(lt.size(catalog['artworks'])+1):
-   
+    for cont in range(1,lt.size(catalog['artworks'])+1):
+        
         artwork = lt.getElement(catalog['artworks'],cont)
-        idArtist = artwork['ConstituentID'][1:len(artwork['ConstituentID'])-1].split(',')
 
+        idArtist = artwork['ConstituentID'].replace('[','').replace(']','').split(',')
+
+        
         for id in idArtist:
+            
+             
             id=id.strip()
             pos = lt.isPresent(artists,id)
-            
-            if pos==0:
-                continue
 
             artist = lt.getElement(artists,pos)
+
             nation = artist['Nationality']
 
-            addNation(catalog,nation,artwork)
 
+            addNation(catalog,nation,artwork)
+  
     sortNation(catalog['nationalities'])
 
     for pos in range(lt.size(catalog['nationalities'])):
@@ -192,7 +195,7 @@ def ordenNacionalidad(catalog):
 
 
 def newNation(nationality):
-    nation = {'nationality':nationality,'artworks':lt.newList('SINGLE_LINKED',compareArtworks)}
+    nation = {'nationality':nationality,'artworks':lt.newList('ARRAY_LIST',compareArtworks)}
     return nation
 
 def compareQuantity(nation1,nation2):
@@ -203,21 +206,19 @@ def sortNation(nationality):
 
 
 def addNation(catalog,nation_original,artwork):
-
     if nation_original=="":
         nation_original="Nationality unknown"
-    added=[]
-    nationalities = catalog['nationalities']
-    posnation = lt.isPresent(nationalities, nation_original)
+
+    posnation = lt.isPresent(catalog['nationalities'], nation_original)
     if posnation > 0:
-        nation = lt.getElement(nationalities, posnation)
+        nation = lt.getElement(catalog['nationalities'], posnation)
 
     else:
         nation = newNation(nation_original)
-        lt.addLast(nationalities, nation)
+        lt.addLast(catalog['nationalities'], nation)
     
-        
-    if artwork['ObjectID'] not in added:
-        # print(artwork['ObjectID'])
-        lt.addLast(nation['artworks'], artwork)
-        added.append(artwork['ObjectID'])
+
+    # print(artwork['ObjectID'])    
+    lt.addLast(nation['artworks'], artwork)
+
+    

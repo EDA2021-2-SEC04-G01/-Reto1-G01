@@ -25,8 +25,7 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
-
-
+from time import sleep as s
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -73,7 +72,7 @@ while True:
         print('Últimas 3 obras: ') 
         for pos in range(lt.size(catalog['artworks'])-2,lt.size(catalog['artworks'])+1):
             print(lt.getElement(catalog['artworks'],pos))
-        
+
         
         
 
@@ -107,6 +106,7 @@ while True:
 
 
     elif int(inputs[0]) == 3:
+        model.sortArtDates(catalog)
         fechaInicial=input("Introduzca la fecha inicial (AAAA-MM-DD): ")
         fechaFinal=str(input("Introduzca la fecha final (AAAA-MM-DD): "))
 
@@ -121,42 +121,18 @@ while True:
         artista = input("Escriba el nombre del artista: ")
 
     elif int(inputs[0]) == 5:
-       
-        listRetorno=lt.newList()
-        listadoNacionalidad=model.ordenNacionalidad(catalog)
-        nacionalidadesFull=catalog['nationalities']
-        nationMajor=(lt.getElement(nacionalidadesFull,1))['artworks']
-        catArtists=catalog['artists']
-        # print(listadoNacionalidad)
-        for position in range(lt.size(nationMajor)):
-            actual = lt.getElement(nationMajor,position)
-            title = (actual['Title'])
-            artists = []
+        print("Cargando . . . ")
+        resultados = controller.nationArworks(catalog)
+        print("\n--------------- Respuesta Req. No 4 -----------------\n")
+        listadoNacion=(resultados[0])
+        tablaOrden = resultados[1]
 
-            
-            idArtist = actual['ConstituentID'][1:len(actual['ConstituentID'])-1].split(',')
-            for AutID in idArtist:
-                AutID=AutID.strip()
-                artistPos = lt.isPresent(catArtists,AutID)
-                if artistPos == 0:
-                    continue
-                artist = (lt.getElement(catalog['artists'],artistPos))['DisplayName']
-                artists.append(artist)
+        print(listadoNacion)
+        s(5) #### Aquí lo pongo a esperar 5 segundos, únicamente es para que se pueda ver que está pasando con más calma
+        print(tablaOrden)
 
-            date = actual['Date']
-            medium = actual['Medium']
-            dimensions = actual['Dimensions']
-
-            actual = {
-                'Title' : title,
-                'artist(s)':artists,
-                'Date':date,
-                'Medium':medium,
-                'Dimensions':dimensions
-            }
-            lt.addLast(listRetorno,actual)
-        print(listRetorno)
-
+        
+  
 
 
     elif int(inputs[0]) == 6:
@@ -168,7 +144,36 @@ while True:
         fin=int(input("Escriba el año final: "))
         area= int(input("Escriba el área disponible en m\u00b2: "))
 
+    elif int(inputs[0])==0:
+        cantidad=0
+        americanos=[
+29538,
+28867,
+28073,
+44921,
+47183,
+70022,
+2590,
+7474,
+34915,
+28868,
+46702,
+25983,
+49177,
+28328,
+28889
 
+]
+        for i in range(lt.size(catalog['artworks'])):
+            artists=(lt.getElement(catalog['artworks'],i)['ConstituentID']).replace('[','').replace(']','').split(',')
+            for artist in artists:
+                artist=artist.strip()
+                for j in (americanos):
+             
+                    j=str(j)
+                    if j == artist:
+                        cantidad+=1
+        print(cantidad)
     else:
         sys.exit(0)
 sys.exit(0)
