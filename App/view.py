@@ -121,14 +121,18 @@ while True:
         artista = input("Escriba el nombre del artista: ")
 
     elif int(inputs[0]) == 5:
-        print("Cargando . . . ")
+        print("=================Req No. 4 Inputs ====================\n ")
+        print("Ranking countries by their number of Artworks in the MoMA...\n")
         resultados = controller.nationArworks(catalog)
-        print("\n--------------- Respuesta Req. No 4 -----------------\n")
-        listadoNacion=(resultados[0])
+        print("\n--------------- Req No. 4 Answer -----------------\n")
+        print("The TOP 10 Countries in the MoMA are: ")
+        topNation=(resultados[0])
         tablaOrden = resultados[1]
-
-        print(listadoNacion)
-        s(5) #### Aquí lo pongo a esperar 5 segundos, únicamente es para que se pueda ver que está pasando con más calma
+        nameMajor = resultados[2]
+        cantMajor = resultados[3]
+        print(topNation)
+        s(2) #### Aquí lo pongo a esperar 2 segundos, únicamente es para que se pueda ver que está pasando con más calma
+        print("The TOP nacionality in the museum is: {0} with {1} unique pieces.\nThe first and last 3 objects in the {0} artwork list are: ".format(nameMajor,str(cantMajor)))
         print(tablaOrden)
 
         
@@ -144,36 +148,7 @@ while True:
         fin=int(input("Escriba el año final: "))
         area= int(input("Escriba el área disponible en m\u00b2: "))
 
-    elif int(inputs[0])==0:
-        cantidad=0
-        americanos=[
-29538,
-28867,
-28073,
-44921,
-47183,
-70022,
-2590,
-7474,
-34915,
-28868,
-46702,
-25983,
-49177,
-28328,
-28889
 
-]
-        for i in range(lt.size(catalog['artworks'])):
-            artists=(lt.getElement(catalog['artworks'],i)['ConstituentID']).replace('[','').replace(']','').split(',')
-            for artist in artists:
-                artist=artist.strip()
-                for j in (americanos):
-             
-                    j=str(j)
-                    if j == artist:
-                        cantidad+=1
-        print(cantidad)
     else:
         sys.exit(0)
 sys.exit(0)

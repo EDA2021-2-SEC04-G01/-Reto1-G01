@@ -118,42 +118,38 @@ def cronoArtwork(catalog, inicio, fin):
     fin=int(fin.replace('-',''))
     artists = catalog['artists']
     FiltredList=lt.newList()
-    for cont in range(lt.size(catalog['artworks'])+1):
-        artwork=(lt.getElement(catalog['artworks'],cont))   
+    for artwork in lt.iterator(catalog['artworks']):
+        # artwork=(lt.getElement(catalog['artworks'],cont))   
            
-        if artwork["DateAcquired"] == '':
-            continue
-
-        if int(artwork["DateAcquired"].replace('-','')) in range(inicio,fin+1):
-           
-            artistList=[]
-            idArtist = artwork['ConstituentID'][1:len(artwork['ConstituentID'])-1].split(',')
-     
-            for id in idArtist:
-                id=id.strip()
-                pos = lt.isPresent(artists,id)
-                
-                if pos==0:
-                    continue
-
-                artist =(lt.getElement(artists,pos))['DisplayName']
-                artistList.append(artist)
-
-            artworkFinal={'Title':artwork['Title'],
-                          'Artist(s)':artistList,
-                          'Date':artwork['Date'],
-                          'Medium':artwork['Medium'],
-                          'Dimensions':artwork['Dimensions'],
-                          'DateAcquired':artwork['DateAcquired']}
-            lt.addLast(FiltredList,artworkFinal)
-
+        if artwork["DateAcquired"] != '':
+            if int(artwork["DateAcquired"].replace('-','')) in range(inicio,fin+1):
             
-            if ('purchase' in artwork['CreditLine'].lower()):
-                 print((artwork["DateAcquired"].replace('-',''))) 
-                 purchasedCant+=1
-       
-        elif int(artwork["DateAcquired"].replace('-','')) > fin:
-             break
+                artistList=[]
+                idArtist = artwork['ConstituentID'].replace('[','').replace(']','').split(',')
+        
+                for id in idArtist:
+                    id=id.strip()
+                    pos = lt.isPresent(artists,id)
+                    
+                    if pos!=0:
+                        artist =(lt.getElement(artists,pos))['DisplayName']
+                        artistList.append(artist)
+
+                artworkFinal={'Title':artwork['Title'],
+                            'Artist(s)':artistList,
+                            'Date':artwork['Date'],
+                            'Medium':artwork['Medium'],
+                            'Dimensions':artwork['Dimensions'],
+                            'DateAcquired':artwork['DateAcquired']}
+                lt.addLast(FiltredList,artworkFinal)
+
+                
+                if ('purchase' in artwork['CreditLine'].lower()):
+                    print((artwork["DateAcquired"].replace('-',''))) 
+                    purchasedCant+=1
+        
+            elif int(artwork["DateAcquired"].replace('-','')) > fin:
+                break
     
     if lt.isEmpty(FiltredList):
         return "No hay obras de arte en el rango indicado"
@@ -164,30 +160,24 @@ def cronoArtwork(catalog, inicio, fin):
 def ordenNacionalidad(catalog):
     listado=[]
     artists = catalog['artists']
-    for cont in range(1,lt.size(catalog['artworks'])+1):
+    for artwork in lt.iterator(catalog['artworks']):
         
-        artwork = lt.getElement(catalog['artworks'],cont)
-
         idArtist = artwork['ConstituentID'].replace('[','').replace(']','').split(',')
-
         
         for id in idArtist:
-            
-             
+
             id=id.strip()
+
             pos = lt.isPresent(artists,id)
-
             artist = lt.getElement(artists,pos)
-
             nation = artist['Nationality']
-
 
             addNation(catalog,nation,artwork)
   
     sortNation(catalog['nationalities'])
 
-    for pos in range(lt.size(catalog['nationalities'])):
-        nacionalidad=(lt.getElement(catalog['nationalities'],pos)['nationality'])
+    for nacionalidad in lt.iterator(catalog['nationalities']):
+
         if nacionalidad not in listado:
             listado.append(nacionalidad)
 
@@ -216,9 +206,7 @@ def addNation(catalog,nation_original,artwork):
     else:
         nation = newNation(nation_original)
         lt.addLast(catalog['nationalities'], nation)
-    
-
-    # print(artwork['ObjectID'])    
+  
     lt.addLast(nation['artworks'], artwork)
 
     
