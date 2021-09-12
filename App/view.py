@@ -33,6 +33,14 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+"""
+IMPORTANTE:
+Puede que haya algunas diferencias con los resultados mostrados en el ejemplo, sin embargo es
+debido a que se usaron array list, lo que hace que funcione el ordenamiento. Las cantidades, sin embargo son las mismas.
+"""
+
+
+
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
