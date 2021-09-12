@@ -190,7 +190,35 @@ def ordenNacionalidad(catalog):
   
     sortNation(catalog['nationalities'])
 
+def nationArworks(catalog):
+#       Aquí inicio declarando las variables con las que voy a trabajar, obteniendo del catálogo lo que 
+#       se necesita y demás.        
+        listCant = []
+        listArtworksEnd=[]
+        ordenNacionalidad(catalog)
+        nacionalidadesFull=catalog['nationalities']
+        nationMajor=(lt.getElement(nacionalidadesFull,1))['artworks'] #Tomo la posición 1 porque del model ya sale ordenado de mayor a menor.
 
+#       Este ciclo se encarga de recorrer todos los elementos de la nacionalidad con mayor cantidad de obras.        
+        for position in range(1,4):
+            selectInfo(position,nationMajor,listArtworksEnd,catalog)
+
+        for position in range(lt.size(nacionalidadesFull)-3,lt.size(nacionalidadesFull)):
+            selectInfo(position,nationMajor,listArtworksEnd,catalog)
+            
+#       Se hacen los headers, para ponerlos en la tabla
+        headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
+#       Se crea la tabla pasándole como parámetro la lista grande, los headers creados al final y format grid para que se vea más como una tabla.
+        tabla=(tabulate(listArtworksEnd, headers=headers, tablefmt='grid',numalign='center'))
+
+        for position in range(1,11):
+            nation = lt.getElement(nacionalidadesFull,position)
+            size = lt.size(nation['artworks'])
+            listCant.append([nation['nationality'],size])
+
+        completeNationMajor = lt.getElement(nacionalidadesFull,1)
+        tablaCant = tabulate(listCant,headers=['Nationality','Artworks'],tablefmt='grid',numalign='right')
+        return (tablaCant,tabla,completeNationMajor['nationality'],lt.size(completeNationMajor['artworks']))
 
 
 def newNation(nationality):

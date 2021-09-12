@@ -76,14 +76,10 @@ def sortArtDates(catalog):
 """Esta función es para organizar el tamaño de las casillas de la tabla, 
 la declaramos globalmente porque se usa en varias ocasiones
 """
-def distribuir(elemento,cantidad):
-    str_distribuido = '\n'.join((textwrap.wrap(elemento,cantidad)))
-    return str_distribuido
+
 
 def cronoArtist(catalog,inicio,fin):
     return(model.cronoArtist(catalog,inicio,fin))
-
-
 
 def cronoArtworks(catalog,inicio,fin):
     #Ordenamos aquí y no al inicio con lo demás para no alterar el resultado del requerimiento 4.
@@ -91,97 +87,4 @@ def cronoArtworks(catalog,inicio,fin):
     return(model.cronoArtwork(catalog,inicio,fin))
 
 def nationArworks(catalog):
-#       Aquí inicio declarando las variables con las que voy a trabajar, obteniendo del catálogo lo que 
-#       se necesita y demás.        
-        listCant = []
-        listArtworksEnd=[]
-        model.ordenNacionalidad(catalog)
-        nacionalidadesFull=catalog['nationalities']
-        nationMajor=(lt.getElement(nacionalidadesFull,1))['artworks'] #Tomo la posición 1 porque del model ya sale ordenado de mayor a menor.
-
-#       Este ciclo se encarga de recorrer todos los elementos de la nacionalidad con mayor cantidad de obras.        
-        for position in range(1,4):
-            selectInfo(position,nationMajor,listArtworksEnd,catalog)
-
-        for position in range(lt.size(nacionalidadesFull)-3,lt.size(nacionalidadesFull)):
-            selectInfo(position,nationMajor,listArtworksEnd,catalog)
-            
-#       Se hacen los headers, para ponerlos en la tabla
-        headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
-#       Se crea la tabla pasándole como parámetro la lista grande, los headers creados al final y format grid para que se vea más como una tabla.
-        tabla=(tabulate(listArtworksEnd, headers=headers, tablefmt='grid',numalign='center'))
-
-        for position in range(1,11):
-            nation = lt.getElement(nacionalidadesFull,position)
-            size = lt.size(nation['artworks'])
-            listCant.append([nation['nationality'],size])
-
-        completeNationMajor = lt.getElement(nacionalidadesFull,1)
-        tablaCant = tabulate(listCant,headers=['Nationality','Artworks'],tablefmt='grid',numalign='right')
-        return (tablaCant,tabla,completeNationMajor['nationality'],lt.size(completeNationMajor['artworks']))
-
-def selectInfo(position,ListArtworks,listArtworksEnd,catalog):
-#       ↓↓↓ Todo este montón de líneas se encargan de sacar la info. necesaria del diccionario grande y con textwrap lo separa en líneas de un igual tamaño.
-        
-
-        artwork = lt.getElement(ListArtworks,position)
-
-        objectID = artwork['ObjectID']
-        title=distribuir(artwork['Title'],10)
-        date=distribuir(artwork['Date'],10)
-        medium=distribuir(artwork['Medium'],20)
-        dimensions=distribuir(artwork['Dimensions'],20)
-        department=distribuir(artwork['Department'],15)
-        classification=distribuir(artwork['Classification'],15)
-
-        url = artwork['URL'] 
-        if url == None or url == '': #esto de acá solo hace que se vuelva Unknown si está vacía la casilla de url
-            url ='Unknown'
-        url='\n'.join(((textwrap.wrap(url,15))))
-
-#       Aquí se recorren internamente los artistas que tenga cada obra para luego buscarlos en el archivo artists y sacar sus nombres.
-        artists = ""
-        idArtist = artwork['ConstituentID'].replace('[','').replace(']','').split(',') #Hago lo de artwork['ConstituentID'].replace('[','').replace(']','') para quitarle los corchetes []
-        for AuthorID in idArtist: 
-            AuthorID=AuthorID.strip() #Strip quita espacios innecesarios
-            artistPos = lt.isPresent(catalog['artists'],AuthorID)
-            if artistPos != 0: 
-                artist = (lt.getElement(catalog['artists'],artistPos))['DisplayName'] 
-
-#           Este if solo es para separar por comas si hay varios artistas, para no iniciar con coma si está vacío.                
-            if artists=="":
-                artists+=artist
-            else:
-                artists+=", "+artist
-#       Se vuelve a hacer lo de antes para separar con una cantidad exacta de lineas.
-        artists=distribuir(artists,15)
-
-#       Se crea una lista con todo lo que pide el requerimiento.
-        artwork = [objectID,title,artists,medium,dimensions,date,
-                   department,classification,url]
-#       Se pone un nuevo registro con la info de cada obra en la lista grande declarada al inicio.
-        listArtworksEnd.append(artwork)
-
-def selectArtist(position,ArtistList,lstArtistEnd,catalog):
-    artist = lt.getElement(ArtistList,position)
-    ConstID = artist['ConstituentID']
-    name=distribuir(artist['DisplayName'],15)
-    bgndate=artist['BeginDate']
-    nationality=artist['Nationality']
-    gender=artist['Gender']
-    bio=artist['ArtistBio']
-    qid=artist['Wiki QID']
-    ulan = artist['ULAN']
-
-    if qid == None or qid == '': qid='Unknown'
-    if ulan == None or ulan == '': ulan='Unknown'
-    if nationality == None or nationality == '': nationality='Unknown'
-    if gender == None or gender == '': gender='Unknown'
-    if bgndate == None or bgndate == '': bgndate='Unknown'
-    if bio == None or bio == '': bio='Unknown'
-
-    artistInfo=[ConstID,name,bgndate,nationality,gender,bio,qid,ulan]
-    lstArtistEnd.append(artistInfo)
-
-
-
+    return (model.nationArworks(catalog))
