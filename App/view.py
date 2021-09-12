@@ -59,6 +59,7 @@ Menu principal
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar: ')
+#Carga de datos
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
@@ -76,7 +77,7 @@ while True:
         
         
 
-
+#Requerimiento 1
     elif int(inputs[0]) == 2:
         anio_inicio=int(input("Escriba el año de inicio: "))
         anio_fin=int(input("Escriba el año final: "))
@@ -104,22 +105,29 @@ while True:
 
 
 
-
+##Requerimiento 2
     elif int(inputs[0]) == 3:
-        model.sortArtDates(catalog)
-        fechaInicial=input("Introduzca la fecha inicial (AAAA-MM-DD): ")
-        fechaFinal=str(input("Introduzca la fecha final (AAAA-MM-DD): "))
+        inicio=(input("Escriba el año de inicio: "))
+        fin=(input("Escriba el año final: "))
 
-        cosa = model.cronoArtwork(catalog,fechaInicial,fechaFinal)
-        cantCompradas=str(cosa[1])
-        cosa=cosa[0]
-        print('total de obras en el rango ingresado: '+str(lt.size(cosa)))
-        print(cosa)
-        print('Número total de obras adquiridas por compra '+cantCompradas)
+        resultado = controller.cronoArtworks(catalog,inicio,fin)
+        tabla = resultado[0]
+        cantObras = resultado[1]
+        cantCompradas = resultado[2]
+        cantArtists = resultado[3]
+        print("=================== Req No. 2 Inputs =====================\n")
+        print("Artworks acquired between {0} and {1}".format(inicio,fin))
+        print("=================== Req No. 2 Answer =====================\n\n")
+        print("The MoMA acquired {0} unique pieces between {1} and {2}\n".format(str(cantObras),inicio,fin))
+        print("With {0} different artists and purchased {1} of them.\n\nThe first and last 3 artworks in the range are... ".format(cantArtists,cantCompradas))
+        print(tabla)
 
+#Requerimiento 3
     elif int(inputs[0]) == 4:
         artista = input("Escriba el nombre del artista: ")
 
+
+#Requerimiento 4
     elif int(inputs[0]) == 5:
         print("=================Req No. 4 Inputs ====================\n ")
         print("Ranking countries by their number of Artworks in the MoMA...\n")
@@ -138,11 +146,11 @@ while True:
         
   
 
-
+#Requrimiento 5
     elif int(inputs[0]) == 6:
         dpto=input("Escriba el departamento del museo: ")
 
-
+#Requirimiento 6
     elif int(inputs[0]) == 7:
         inicio=int(input("Escriba el año inicial: "))
         fin=int(input("Escriba el año final: "))

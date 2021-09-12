@@ -117,14 +117,14 @@ def cronoArtwork(catalog, inicio, fin):
     inicio=int(inicio.replace('-',''))
     fin=int(fin.replace('-',''))
     artists = catalog['artists']
+    artistList=[]
     FiltredList=lt.newList()
     for artwork in lt.iterator(catalog['artworks']):
-        # artwork=(lt.getElement(catalog['artworks'],cont))   
            
         if artwork["DateAcquired"] != '':
             if int(artwork["DateAcquired"].replace('-','')) in range(inicio,fin+1):
-            
-                artistList=[]
+
+#               Esto de aquí es para sacar los artistas únicos y luego contarlos, al final.
                 idArtist = artwork['ConstituentID'].replace('[','').replace(']','').split(',')
         
                 for id in idArtist:
@@ -133,28 +133,22 @@ def cronoArtwork(catalog, inicio, fin):
                     
                     if pos!=0:
                         artist =(lt.getElement(artists,pos))['DisplayName']
-                        artistList.append(artist)
-
-                artworkFinal={'Title':artwork['Title'],
-                            'Artist(s)':artistList,
-                            'Date':artwork['Date'],
-                            'Medium':artwork['Medium'],
-                            'Dimensions':artwork['Dimensions'],
-                            'DateAcquired':artwork['DateAcquired']}
-                lt.addLast(FiltredList,artworkFinal)
-
+                        #En esta linea nos aseguramos de que no hayan artistas repetidos
+                        if artist not in artistList: artistList.append(artist)
+                     
+                
+                lt.addLast(FiltredList,artwork)
                 
                 if ('purchase' in artwork['CreditLine'].lower()):
-                    print((artwork["DateAcquired"].replace('-',''))) 
                     purchasedCant+=1
-        
-            elif int(artwork["DateAcquired"].replace('-','')) > fin:
+#           Aquí hacemos que el ciclo se rompa porque ya está ordenado, así que es mejor detener el ciclo si se sabe que no hay más después        
+            elif int(artwork["DateAcquired"].replace('-','')) > fin: 
                 break
     
     if lt.isEmpty(FiltredList):
         return "No hay obras de arte en el rango indicado"
     else:
-        return (FiltredList,purchasedCant)        
+        return (FiltredList,purchasedCant,len(artistList))        
 
 
 def ordenNacionalidad(catalog):

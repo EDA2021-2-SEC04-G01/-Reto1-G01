@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from DISClib.Algorithms.Sorting.shellsort import sort
 import config as cf
 import model
 import csv
@@ -75,6 +76,32 @@ def sortArtDates(catalog):
 
 # Funciones de consulta sobre el catálogo
 
+"""Esta función es para organizar el tamaño de las casillas de la tabla, 
+la declaramos globalmente porque se usa en varias ocasiones
+"""
+def distribuir(elemento,cantidad):
+    str_distribuido = '\n'.join((textwrap.wrap(elemento,cantidad)))
+    return str_distribuido
+
+
+def cronoArtworks(catalog,inicio,fin):
+    #Ordenamos aquí y no al inicio con lo demás para no alterar el resultado del requerimiento 4.
+    sortArtDates(catalog)
+    data = model.cronoArtwork(catalog,inicio,fin)
+    listArtworks = data[0] 
+    cantPurchased = data[1]
+    cantArtists = data[2]
+    listReturn = []
+    for position in range(1,4):
+         selectInfo(position,listArtworks,listReturn,catalog)
+
+    for position in range(lt.size(listArtworks)-3,lt.size(listArtworks)):
+        selectInfo(position,listArtworks,listReturn,catalog)
+    headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
+    tabla = tabulate(listReturn,headers=headers,tablefmt='grid',numalign='center')
+    return (tabla,lt.size(listArtworks),cantPurchased,cantArtists)
+
+
 def nationArworks(catalog):
 #       Aquí inicio declarando las variables con las que voy a trabajar, obteniendo del catálogo lo que 
 #       se necesita y demás.        
@@ -92,7 +119,7 @@ def nationArworks(catalog):
             selectInfo(position,nationMajor,listArtworks,catalog)
             
 #       Se hacen los headers, para ponerlos en la tabla
-        headers = ['Title','Artist(s)','Date','Medium','Dimensions','Department','Classification','URL']
+        headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
 #       Se crea la tabla pasándole como parámetro la lista grande, los headers creados al final y format grid para que se vea más como una tabla.
         tabla=(tabulate(listArtworks, headers=headers, tablefmt='grid',numalign='center'))
 
@@ -105,15 +132,13 @@ def nationArworks(catalog):
         tablaCant = tabulate(listCant,headers=['Nationality','Artworks'],tablefmt='grid',numalign='right')
         return (tablaCant,tabla,completeNationMajor['nationality'],lt.size(completeNationMajor['artworks']))
 
-def selectInfo(position,nationMajor,listArtworks,catalog):
+def selectInfo(position,ListArtworks,listArtworks,catalog):
 #       ↓↓↓ Todo este montón de líneas se encargan de sacar la info. necesaria del diccionario grande y con textwrap lo separa en líneas de un igual tamaño.
         
-        def distribuir(elemento,cantidad):
-            str_distribuido = '\n'.join((textwrap.wrap(elemento,cantidad)))
-            return str_distribuido
 
-        artwork = lt.getElement(nationMajor,position)
-        
+        artwork = lt.getElement(ListArtworks,position)
+
+        objectID = artwork['ObjectID']
         title=distribuir(artwork['Title'],10)
         date=distribuir(artwork['Date'],10)
         medium=distribuir(artwork['Medium'],20)
@@ -144,7 +169,9 @@ def selectInfo(position,nationMajor,listArtworks,catalog):
         artists=distribuir(artists,15)
 
 #       Se crea una lista con todo lo que pide el requerimiento.
-        artwork = [title,artists,date,medium,dimensions,
+        artwork = [objectID,title,artists,medium,dimensions,date,
                    department,classification,url]
 #       Se pone un nuevo registro con la info de cada obra en la lista grande declarada al inicio.
         listArtworks.append(artwork)
+
+
