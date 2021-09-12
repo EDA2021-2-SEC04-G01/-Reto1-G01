@@ -97,9 +97,8 @@ def compareNation(nation1,nation):
 def cronoArtist(catalog, inicio, fin):
 
     FiltredList=lt.newList()
-    for cont in range(lt.size(catalog['artists'])):
-        artist=(lt.getElement(catalog['artists'],cont))       
- 
+    for artist in lt.iterator(catalog['artists']):
+        
         if int(artist["BeginDate"]) in range(inicio,fin+1):
     
             lt.addLast(FiltredList,artist)

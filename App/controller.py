@@ -68,9 +68,6 @@ def loadArtworks(catalog):
 def sortDates(catalog):
     model.sortDates(catalog)
 
-def cronoArtist(catalog,inicio,fin):
-    return model.cronoArtist(catalog,inicio,fin)
-
 def sortArtDates(catalog):
     model.sortArtworksDates(catalog)
 
@@ -83,45 +80,57 @@ def distribuir(elemento,cantidad):
     str_distribuido = '\n'.join((textwrap.wrap(elemento,cantidad)))
     return str_distribuido
 
+def cronoArtist(catalog,inicio,fin):
+    filtredList = model.cronoArtist(catalog,inicio,fin)
+    artistCant = lt.size(filtredList)
+    lstArtist=[]
+    for position in range(1,4):
+        selectArtist(position,filtredList,lstArtist,catalog)
+    for position in range(lt.size(filtredList)-2,lt.size(filtredList)+1):
+        selectArtist(position,filtredList,lstArtist,catalog)
+    headers = ['ConstituentID','DisplayName','BeginDate','Nationality','Gender','ArtistBio','Wiki QID','ULAN']
+    tabla = tabulate(lstArtist,headers=headers,tablefmt='grid')
+    return (tabla,artistCant)
+
 
 def cronoArtworks(catalog,inicio,fin):
     #Ordenamos aquí y no al inicio con lo demás para no alterar el resultado del requerimiento 4.
     sortArtDates(catalog)
     data = model.cronoArtwork(catalog,inicio,fin)
-    listArtworks = data[0] 
+    listArtworksEnd = data[0] 
     cantPurchased = data[1]
     cantArtists = data[2]
     listReturn = []
     for position in range(1,4):
-         selectInfo(position,listArtworks,listReturn,catalog)
+         selectInfo(position,listArtworksEnd,listReturn,catalog)
 
-    for position in range(lt.size(listArtworks)-3,lt.size(listArtworks)):
-        selectInfo(position,listArtworks,listReturn,catalog)
+    for position in range(lt.size(listArtworksEnd)-3,lt.size(listArtworksEnd)+1):
+        selectInfo(position,listArtworksEnd,listReturn,catalog)
     headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
     tabla = tabulate(listReturn,headers=headers,tablefmt='grid',numalign='center')
-    return (tabla,lt.size(listArtworks),cantPurchased,cantArtists)
+    return (tabla,lt.size(listArtworksEnd),cantPurchased,cantArtists)
 
 
 def nationArworks(catalog):
 #       Aquí inicio declarando las variables con las que voy a trabajar, obteniendo del catálogo lo que 
 #       se necesita y demás.        
         listCant = []
-        listArtworks=[]
+        listArtworksEnd=[]
         model.ordenNacionalidad(catalog)
         nacionalidadesFull=catalog['nationalities']
         nationMajor=(lt.getElement(nacionalidadesFull,1))['artworks'] #Tomo la posición 1 porque del model ya sale ordenado de mayor a menor.
 
 #       Este ciclo se encarga de recorrer todos los elementos de la nacionalidad con mayor cantidad de obras.        
         for position in range(1,4):
-            selectInfo(position,nationMajor,listArtworks,catalog)
+            selectInfo(position,nationMajor,listArtworksEnd,catalog)
 
         for position in range(lt.size(nacionalidadesFull)-3,lt.size(nacionalidadesFull)):
-            selectInfo(position,nationMajor,listArtworks,catalog)
+            selectInfo(position,nationMajor,listArtworksEnd,catalog)
             
 #       Se hacen los headers, para ponerlos en la tabla
         headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
 #       Se crea la tabla pasándole como parámetro la lista grande, los headers creados al final y format grid para que se vea más como una tabla.
-        tabla=(tabulate(listArtworks, headers=headers, tablefmt='grid',numalign='center'))
+        tabla=(tabulate(listArtworksEnd, headers=headers, tablefmt='grid',numalign='center'))
 
         for position in range(1,11):
             nation = lt.getElement(nacionalidadesFull,position)
@@ -132,7 +141,7 @@ def nationArworks(catalog):
         tablaCant = tabulate(listCant,headers=['Nationality','Artworks'],tablefmt='grid',numalign='right')
         return (tablaCant,tabla,completeNationMajor['nationality'],lt.size(completeNationMajor['artworks']))
 
-def selectInfo(position,ListArtworks,listArtworks,catalog):
+def selectInfo(position,ListArtworks,listArtworksEnd,catalog):
 #       ↓↓↓ Todo este montón de líneas se encargan de sacar la info. necesaria del diccionario grande y con textwrap lo separa en líneas de un igual tamaño.
         
 
@@ -172,6 +181,28 @@ def selectInfo(position,ListArtworks,listArtworks,catalog):
         artwork = [objectID,title,artists,medium,dimensions,date,
                    department,classification,url]
 #       Se pone un nuevo registro con la info de cada obra en la lista grande declarada al inicio.
-        listArtworks.append(artwork)
+        listArtworksEnd.append(artwork)
+
+def selectArtist(position,ArtistList,lstArtistEnd,catalog):
+    artist = lt.getElement(ArtistList,position)
+    ConstID = artist['ConstituentID']
+    name=distribuir(artist['DisplayName'],15)
+    bgndate=artist['BeginDate']
+    nationality=artist['Nationality']
+    gender=artist['Gender']
+    bio=artist['ArtistBio']
+    qid=artist['Wiki QID']
+    ulan = artist['ULAN']
+
+    if qid == None or qid == '': qid='Unknown'
+    if ulan == None or ulan == '': ulan='Unknown'
+    if nationality == None or nationality == '': nationality='Unknown'
+    if gender == None or gender == '': gender='Unknown'
+    if bgndate == None or bgndate == '': bgndate='Unknown'
+    if bio == None or bio == '': bio='Unknown'
+
+    artistInfo=[ConstID,name,bgndate,nationality,gender,bio,qid,ulan]
+    lstArtistEnd.append(artistInfo)
+
 
 

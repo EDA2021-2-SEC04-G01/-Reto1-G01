@@ -79,30 +79,17 @@ while True:
 
 #Requerimiento 1
     elif int(inputs[0]) == 2:
-        anio_inicio=int(input("Escriba el año de inicio: "))
-        anio_fin=int(input("Escriba el año final: "))
-        cosa=(model.cronoArtist(catalog,anio_inicio,anio_fin))
-        
-        
-        if lt.size(cosa)>=3:
-            
-            print('Primeros 3 artistas: ')
-            for pos in range(3):
-                print((lt.getElement(cosa,pos))['DisplayName'])
-
-            print('Últimos 3 artistas: ')
-            for pos in range(lt.size(cosa)-3,lt.size(cosa)):
-                print((lt.getElement(cosa,pos))['DisplayName'])
-        else:
-            print('Primeros y últimos 1 o 2 artistas: ')
-            for pos in range(lt.size(cosa)):
-                print((lt.getElement(cosa,pos))['DisplayName'])
-
-        
-        
-        #print(cosa)
-
-
+        inicio=int(input("Escriba el año de inicio: "))
+        fin=int(input("Escriba el año final: "))
+        print("================= Req No. 1 Inputs ==================")
+        print("\nArtist born between {} and {}.\n".format(inicio,fin))
+        resultados= controller.cronoArtist(catalog,inicio,fin)
+        tabla=resultados[0]
+        cantArtists = resultados[1]
+        print("================= Req No. 1 Answer ==================\n")
+        print("There are {0} artist born between {1} and {2}\n\n".format(cantArtists,inicio,fin))
+        print("The first and last 3 artists in range are...\n")
+        print(tabla) 
 
 
 ##Requerimiento 2
