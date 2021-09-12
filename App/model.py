@@ -116,7 +116,7 @@ def cronoArtwork(catalog, inicio, fin):
     inicio=int(inicio.replace('-',''))
     fin=int(fin.replace('-',''))
     artists = catalog['artists']
-    artistList=[]
+    artistList=lt.newList()
     FiltredList=lt.newList()
     for artwork in lt.iterator(catalog['artworks']):
            
@@ -133,7 +133,7 @@ def cronoArtwork(catalog, inicio, fin):
                     if pos!=0:
                         artist =(lt.getElement(artists,pos))['DisplayName']
                         #En esta linea nos aseguramos de que no hayan artistas repetidos
-                        if artist not in artistList: artistList.append(artist)
+                        if lt.isPresent(artistList,artist)==0: lt.addLast(artistList,artist)
                      
                 
                 lt.addLast(FiltredList,artwork)
@@ -147,11 +147,10 @@ def cronoArtwork(catalog, inicio, fin):
     if lt.isEmpty(FiltredList):
         return "No hay obras de arte en el rango indicado"
     else:
-        return (FiltredList,purchasedCant,len(artistList))        
+        return (FiltredList,purchasedCant,lt.size(artistList))        
 
 
 def ordenNacionalidad(catalog):
-    listado=[]
     artists = catalog['artists']
     for artwork in lt.iterator(catalog['artworks']):
         
@@ -169,12 +168,7 @@ def ordenNacionalidad(catalog):
   
     sortNation(catalog['nationalities'])
 
-    for nacionalidad in lt.iterator(catalog['nationalities']):
 
-        if nacionalidad not in listado:
-            listado.append(nacionalidad)
-
-    return listado
 
 
 def newNation(nationality):

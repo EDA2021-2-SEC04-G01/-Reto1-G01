@@ -102,8 +102,8 @@ while True:
 
 ##Requerimiento 2
     elif int(inputs[0]) == 3:
-        inicio=(input("Escriba el año de inicio: "))
-        fin=(input("Escriba el año final: "))
+        inicio=(input("Escriba la fecha de inicio: "))
+        fin=(input("Escriba la fecha final: "))
 
         resultado = controller.cronoArtworks(catalog,inicio,fin)
         tabla = resultado[0]
