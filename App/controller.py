@@ -81,35 +81,14 @@ def distribuir(elemento,cantidad):
     return str_distribuido
 
 def cronoArtist(catalog,inicio,fin):
-    filtredList = model.cronoArtist(catalog,inicio,fin)
-    artistCant = lt.size(filtredList)
-    lstArtist=[]
-    for position in range(1,4):
-        selectArtist(position,filtredList,lstArtist,catalog)
-    for position in range(lt.size(filtredList)-2,lt.size(filtredList)+1):
-        selectArtist(position,filtredList,lstArtist,catalog)
-    headers = ['ConstituentID','DisplayName','BeginDate','Nationality','Gender','ArtistBio','Wiki QID','ULAN']
-    tabla = tabulate(lstArtist,headers=headers,tablefmt='grid')
-    return (tabla,artistCant)
+    return(model.cronoArtist(catalog,inicio,fin))
+
 
 
 def cronoArtworks(catalog,inicio,fin):
     #Ordenamos aquí y no al inicio con lo demás para no alterar el resultado del requerimiento 4.
     sortArtDates(catalog)
-    data = model.cronoArtwork(catalog,inicio,fin)
-    listArtworksEnd = data[0] 
-    cantPurchased = data[1]
-    cantArtists = data[2]
-    listReturn = []
-    for position in range(1,4):
-         selectInfo(position,listArtworksEnd,listReturn,catalog)
-
-    for position in range(lt.size(listArtworksEnd)-3,lt.size(listArtworksEnd)+1):
-        selectInfo(position,listArtworksEnd,listReturn,catalog)
-    headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
-    tabla = tabulate(listReturn,headers=headers,tablefmt='grid',numalign='center')
-    return (tabla,lt.size(listArtworksEnd),cantPurchased,cantArtists)
-
+    return(model.cronoArtwork(catalog,inicio,fin))
 
 def nationArworks(catalog):
 #       Aquí inicio declarando las variables con las que voy a trabajar, obteniendo del catálogo lo que 

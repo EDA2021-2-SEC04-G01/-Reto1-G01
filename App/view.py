@@ -92,12 +92,15 @@ while True:
         print("================= Req No. 1 Inputs ==================")
         print("\nArtist born between {} and {}.\n".format(inicio,fin))
         resultados= controller.cronoArtist(catalog,inicio,fin)
+        if  "No hay" in resultados :
+            print(resultados+"\n")
+            break
         tabla=resultados[0]
         cantArtists = resultados[1]
         print("================= Req No. 1 Answer ==================\n")
         print("There are {0} artist born between {1} and {2}\n\n".format(cantArtists,inicio,fin))
         print("The first and last 3 artists in range are...\n")
-        print(tabla) 
+        print(tabla)
 
 
 ##Requerimiento 2
