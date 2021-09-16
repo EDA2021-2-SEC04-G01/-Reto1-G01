@@ -122,18 +122,18 @@ while True:
         fin=(input("Escriba la fecha final: "))
         activo = True
         while activo:
-            opcion=int(input(("Seleccione el método de ordenamiento: \n1. shellsort\n2. insertion\n3. merge\n4. quicksort: \n")))
+            opcion=int(input(("Seleccione el método de ordenamiento: \n1. insertion\n2. shellsort\n3. quicksort\n4. merge: \n")))
             if opcion ==1: 
-                method='sa'
+                method='insert'
                 activo = False
             elif opcion ==2:
-                 method = 'insert'
+                 method = 'sa'
                  activo = False
             elif opcion ==3: 
-                method = 'msort'
+                method = 'qsort'
                 activo = False
             elif opcion == 4:
-                 method = 'qsort'
+                 method = 'msort'
                  activo = False
             else: print("Por favor seleccione una opción válida. \n")
         
