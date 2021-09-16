@@ -28,36 +28,43 @@ import textwrap
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import insertionsort as insert
+from DISClib.Algorithms.Sorting import quicksort as qsort
+from DISClib.Algorithms.Sorting import mergesort as msort
 assert cf
 from tabulate import tabulate
 import textwrap 
-
+import time
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
 """
-
+"""
+IMPORTANTE:
+Puede que haya algunas diferencias con los resultados mostrados en el ejemplo, sin embargo es
+debido a que se usaron array list, lo que hace que funcione diferente el ordenamiento. Las cantidades, sin embargo son las mismas.
+"""
 # Construccion de modelos
 
-def newCatalog():
+def newCatalog(tipo_lista):
     catalog = {
-        'artworks':lt.newList('ARRAY_LIST'),
-        'artists':lt.newList('ARRAY_LIST',cmpfunction=compareArtists),
-        'technique':lt.newList('ARRAY_LIST'),
-        'nationalities': lt.newList('ARRAY_LIST',cmpfunction=compareNation)
+        'artworks':lt.newList(tipo_lista),
+        'artists':lt.newList(tipo_lista,cmpfunction=compareArtists),
+        'technique':lt.newList(tipo_lista),
+        'nationalities': lt.newList(tipo_lista,cmpfunction=compareNation)
     }   
     return catalog
-# Funciones para agregar informacion al catalogo
+# Funciones para agregar informacion al  catalogo
 
 
 def addArtist(catalog,artist):
     lt.addLast(catalog['artists'],artist)
-    dates= artist['BeginDate'].split(',')
+
 
 
 def addArtwork(catalog,artwork):
     lt.addLast(catalog['artworks'],artwork)
-    dates = artwork['DateAcquired'].split(',')
+    
 
 
 # Funciones para creacion de datos
@@ -88,9 +95,15 @@ def compareArtDates(art1,art2):
 def sortDates(catalog):
     sa.sort(catalog['artists'],compareFechas)
 
-def sortArtworksDates(catalog):
-    sa.sort(catalog['artworks'],compareArtDates)
+def sortArtworksDates(catalog,cant,method):
 
+    list_sort=lt.subList(catalog['artworks'],1,cant)
+    start_time = time.process_time()
+    eval(method).sort(list_sort,compareArtDates)
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    return (list_sort,elapsed_time_mseg)
+    
 def compareNation(nation1,nation):
     if(nation1 in nation['nationality']):
         return 0
@@ -122,15 +135,16 @@ def cronoArtist(catalog, inicio, fin):
     return (tabla,artistCant)
 
 
-def cronoArtwork(catalog, inicio, fin):
+def cronoArtwork(catalog,sublista, inicio, fin):
     purchasedCant=0
     inicio=int(inicio.replace('-',''))
     fin=int(fin.replace('-',''))
     artists = catalog['artists']
     artistList=lt.newList()
     FiltredList=lt.newList()
-    for artwork in lt.iterator(catalog['artworks']):
-           
+    for artwork in lt.iterator(sublista):
+        #RECORRER EL RANGO MEJOR, LUEGO USAR ISPRESENT. ASÍ SE EVITA RECORRER TOODA LA LISTA.
+        # SE COMIENZA A BUSCAR DESDE EL PRIMER NÚMERO DEL RANGO. HAY MENOR COMPLEJIDAD.   
         if artwork["DateAcquired"] != '':
             if int(artwork["DateAcquired"].replace('-','')) in range(inicio,fin+1):
 
@@ -152,8 +166,8 @@ def cronoArtwork(catalog, inicio, fin):
                 if ('purchase' in artwork['CreditLine'].lower()):
                     purchasedCant+=1
 #           Aquí hacemos que el ciclo se rompa porque ya está ordenado, así que es mejor detener el ciclo si se sabe que no hay más después        
-            elif int(artwork["DateAcquired"].replace('-','')) > fin: 
-                break
+        # elif int((artwork['DateAcquired'].replace('-','')).strip()) > fin: 
+        #     break   
     
     if lt.isEmpty(FiltredList):
         return "No hay obras de arte en el rango indicado"
@@ -169,8 +183,6 @@ def cronoArtwork(catalog, inicio, fin):
         headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
         tabla = tabulate(listReturn,headers=headers,tablefmt='grid',numalign='center')
         return (tabla,lt.size(FiltredList),purchasedCant,cantArtists)
-
-
 
 def ordenNacionalidad(catalog):
     artists = catalog['artists']

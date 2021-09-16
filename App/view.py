@@ -36,7 +36,7 @@ operación solicitada
 """
 IMPORTANTE:
 Puede que haya algunas diferencias con los resultados mostrados en el ejemplo, sin embargo es
-debido a que se usaron array list, lo que hace que funcione el ordenamiento. Las cantidades, sin embargo son las mismas.
+debido a que se usaron array list, lo que hace que funcione diferente el ordenamiento. Las cantidades, sin embargo son las mismas.
 """
 
 
@@ -52,12 +52,13 @@ def printMenu():
     print("7- Calcular cantidad de obras para una nueva exposición de acuerdo al periodo de tiempo y el área disponibles")
 catalog = None
 
+
 """
 Funciones para implementar en los requerimientos
 """
-def initCatalog():
+def initCatalog(tipo_lista):
     
-    return controller.initCatalog()
+    return controller.initCatalog(tipo_lista)
 
 catalog = None
 """
@@ -69,8 +70,19 @@ while True:
     inputs = input('Seleccione una opción para continuar: ')
 #Carga de datos
     if int(inputs[0]) == 1:
+        a=True
+        while a==True:
+            tipo_lista=int(input("Seleccione el tipo de lista que quiere usar.\n1. ARRAY_LIST \n2. para LINKED_LIST: \n"))
+            if tipo_lista==1: 
+                tipo_lista='ARRAY_LIST'
+                a=False
+            elif tipo_lista==2: 
+                tipo_lista = 'SINGLE_LINKED'
+                a=False
+            else:
+                 print("por favor escriba información válida")
         print("Cargando información de los archivos ....")
-        catalog = initCatalog()
+        catalog = initCatalog(tipo_lista)
         controller.loadData(catalog)
         print('Número de artistas cargados:' + str(lt.size(catalog['artists'])))
         print('Últimos 3 artistas: ') 
@@ -87,6 +99,7 @@ while True:
 
 #Requerimiento 1
     elif int(inputs[0]) == 2:
+        
         inicio=int(input("Escriba el año de inicio: "))
         fin=int(input("Escriba el año final: "))
         print("================= Req No. 1 Inputs ==================")
@@ -107,8 +120,37 @@ while True:
     elif int(inputs[0]) == 3:
         inicio=(input("Escriba la fecha de inicio: "))
         fin=(input("Escriba la fecha final: "))
-
-        resultado = controller.cronoArtworks(catalog,inicio,fin)
+        activo = True
+        while activo:
+            opcion=int(input(("Seleccione el método de ordenamiento: \n1. shellsort\n2. insertion\n3. merge\n4. quicksort: \n")))
+            if opcion ==1: 
+                method='sa'
+                activo = False
+            elif opcion ==2:
+                 method = 'insert'
+                 activo = False
+            elif opcion ==3: 
+                method = 'msort'
+                activo = False
+            elif opcion == 4:
+                 method = 'qsort'
+                 activo = False
+            else: print("Por favor seleccione una opción válida. \n")
+        
+        activoSize=True
+        while activoSize:
+            size=int(input(("Escriba el número del tamaño de la sublista, escriba 0 si quiere la lista completa: ")))
+            if size==0:
+                subsize=lt.size(catalog['artworks'])
+                activoSize=False
+            if size<=lt.size(catalog['artworks']):
+                subsize=size
+                activoSize=False
+            else:
+                "Por favor inserte un número válido"
+        
+        tiempo = controller.cronoArtworks(catalog,inicio,fin,subsize,method)[1]
+        resultado = controller.cronoArtworks(catalog,inicio,fin,subsize,method)[0]
         tabla = resultado[0]
         cantObras = resultado[1]
         cantCompradas = resultado[2]
@@ -119,6 +161,7 @@ while True:
         print("The MoMA acquired {0} unique pieces between {1} and {2}\n".format(str(cantObras),inicio,fin))
         print("With {0} different artists and purchased {1} of them.\n\nThe first and last 3 artworks in the range are... ".format(cantArtists,cantCompradas))
         print(tabla)
+        print("El tiempo gastado fue {}".format(tiempo))
 
 #Requerimiento 3
     elif int(inputs[0]) == 4:

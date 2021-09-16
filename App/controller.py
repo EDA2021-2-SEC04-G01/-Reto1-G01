@@ -25,20 +25,22 @@ import config as cf
 import model
 import csv
 
-import textwrap 
-from tabulate import tabulate
-from DISClib.ADT import list as lt
+
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 # Inicialización del Catálogo de libros
-def initCatalog():
-    catalog = model.newCatalog()
+def initCatalog(tipo_lista):
+    catalog = model.newCatalog(tipo_lista)
     return catalog
 
-
+"""
+IMPORTANTE:
+Puede que haya algunas diferencias con los resultados mostrados en el ejemplo, sin embargo es
+debido a que se usaron array list, lo que hace que funcione diferente el ordenamiento. Las cantidades, sin embargo son las mismas.
+"""
 # Funciones para la carga de datos
 
 def loadData(catalog):
@@ -68,8 +70,8 @@ def loadArtworks(catalog):
 def sortDates(catalog):
     model.sortDates(catalog)
 
-def sortArtDates(catalog):
-    model.sortArtworksDates(catalog)
+def sortArtDates(catalog,cant,method):
+    return model.sortArtworksDates(catalog,cant,method)
 
 # Funciones de consulta sobre el catálogo
 
@@ -81,10 +83,11 @@ la declaramos globalmente porque se usa en varias ocasiones
 def cronoArtist(catalog,inicio,fin):
     return(model.cronoArtist(catalog,inicio,fin))
 
-def cronoArtworks(catalog,inicio,fin):
+def cronoArtworks(catalog,inicio,fin,cant,method):
     #Ordenamos aquí y no al inicio con lo demás para no alterar el resultado del requerimiento 4.
-    sortArtDates(catalog)
-    return(model.cronoArtwork(catalog,inicio,fin))
+    sublista=sortArtDates(catalog,cant,method)
+    tiempo = sublista[1]
+    return(model.cronoArtwork(catalog,sublista[0],inicio,fin),tiempo)
 
 def nationArworks(catalog):
     return (model.nationArworks(catalog))
