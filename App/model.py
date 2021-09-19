@@ -109,7 +109,7 @@ def compareNation(nation1,nation):
         return 0
     return -1
 
-def cronoArtist(catalog, inicio, fin):
+def cronoArtist(catalog, inicio, fin,tabsize):
 
     FiltredList=lt.newList()
     for artist in lt.iterator(catalog['artists']):
@@ -128,7 +128,7 @@ def cronoArtist(catalog, inicio, fin):
         lstArtist=[]
         for position in range(1,4):
             selectArtist(position,FiltredList,lstArtist,catalog)
-        for position in range(lt.size(FiltredList)-2,lt.size(FiltredList)+1):
+        for position in range(lt.size(FiltredList)-tabsize,lt.size(FiltredList)+(tabsize-1)):
             selectArtist(position,FiltredList,lstArtist,catalog)
         headers = ['ConstituentID','DisplayName','BeginDate','Nationality','Gender','ArtistBio','Wiki QID','ULAN']
         tabla = tabulate(lstArtist,headers=headers,tablefmt='grid')

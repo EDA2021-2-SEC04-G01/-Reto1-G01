@@ -104,7 +104,8 @@ while True:
         fin=int(input("Escriba el año final: "))
         print("================= Req No. 1 Inputs ==================")
         print("\nArtist born between {} and {}.\n".format(inicio,fin))
-        resultados= controller.cronoArtist(catalog,inicio,fin)
+        #El 3 indica la cantidad de filas (inciales y finales) para poner en la tabla. En el model y el controller se llama tabsize
+        resultados= controller.cronoArtist(catalog,inicio,fin,3)
         if  "No hay" in resultados :
             print(resultados+"\n")
             break
@@ -150,17 +151,17 @@ while True:
                 "Por favor inserte un número válido"
         
         tiempo = controller.cronoArtworks(catalog,inicio,fin,subsize,method)[1]
-        resultado = controller.cronoArtworks(catalog,inicio,fin,subsize,method)[0]
-        tabla = resultado[0]
-        cantObras = resultado[1]
-        cantCompradas = resultado[2]
-        cantArtists = resultado[3]
-        print("=================== Req No. 2 Inputs =====================\n")
-        print("Artworks acquired between {0} and {1}".format(inicio,fin))
-        print("=================== Req No. 2 Answer =====================\n\n")
-        print("The MoMA acquired {0} unique pieces between {1} and {2}\n".format(str(cantObras),inicio,fin))
-        print("With {0} different artists and purchased {1} of them.\n\nThe first and last 3 artworks in the range are... ".format(cantArtists,cantCompradas))
-        print(tabla)
+        # resultado = controller.cronoArtworks(catalog,inicio,fin,subsize,method)[0]
+        # tabla = resultado[0]
+        # cantObras = resultado[1]
+        # cantCompradas = resultado[2]
+        # cantArtists = resultado[3]
+        # print("=================== Req No. 2 Inputs =====================\n")
+        # print("Artworks acquired between {0} and {1}".format(inicio,fin))
+        # print("=================== Req No. 2 Answer =====================\n\n")
+        # print("The MoMA acquired {0} unique pieces between {1} and {2}\n".format(str(cantObras),inicio,fin))
+        # print("With {0} different artists and purchased {1} of them.\n\nThe first and last 3 artworks in the range are... ".format(cantArtists,cantCompradas))
+        # print(tabla)
         print("El tiempo gastado fue {}".format(tiempo))
 
 #Requerimiento 3
@@ -180,7 +181,6 @@ while True:
         nameMajor = resultados[2]
         cantMajor = resultados[3]
         print(topNation)
-        s(2) #### Aquí lo pongo a esperar 2 segundos, únicamente es para que se pueda ver que está pasando con más calma
         print("The TOP nacionality in the museum is: {0} with {1} unique pieces.\nThe first and last 3 objects in the {0} artwork list are: ".format(nameMajor,str(cantMajor)))
         print(tablaOrden)
 

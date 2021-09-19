@@ -51,7 +51,7 @@ def loadData(catalog):
 
 
 def loadArtists(catalog):
-    artistFile=cf.data_dir+"Artists-utf8-20pct.csv"
+    artistFile=cf.data_dir+"Artists-utf8-30pct.csv"
     input_file = csv.DictReader(open(artistFile, encoding='utf-8'))
     for artist in input_file:
         model.addArtist(catalog,artist)
@@ -59,7 +59,7 @@ def loadArtists(catalog):
         
 
 def loadArtworks(catalog):
-    artworkFile=cf.data_dir+"Artworks-utf8-20pct.csv"
+    artworkFile=cf.data_dir+"Artworks-utf8-30pct.csv"
     input_file = csv.DictReader(open(artworkFile, encoding='utf-8'))
     for artwork in input_file:
         model.addArtwork(catalog,artwork)
@@ -80,14 +80,14 @@ la declaramos globalmente porque se usa en varias ocasiones
 """
 
 
-def cronoArtist(catalog,inicio,fin):
-    return(model.cronoArtist(catalog,inicio,fin))
+def cronoArtist(catalog,inicio,fin,tabsize):
+    return(model.cronoArtist(catalog,inicio,fin,tabsize))
 
 def cronoArtworks(catalog,inicio,fin,cant,method):
     #Ordenamos aquí y no al inicio con lo demás para no alterar el resultado del requerimiento 4.
     sublista=sortArtDates(catalog,cant,method)
     tiempo = sublista[1]
     return(model.cronoArtwork(catalog,sublista[0],inicio,fin),tiempo)
-
+    
 def nationArworks(catalog):
     return (model.nationArworks(catalog))
