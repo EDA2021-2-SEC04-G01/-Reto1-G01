@@ -144,7 +144,7 @@ def cronoArtwork(catalog,sublista, inicio, fin):
     FiltredList=lt.newList()
     for artwork in lt.iterator(sublista):
         #RECORRER EL RANGO MEJOR, LUEGO USAR ISPRESENT. ASÍ SE EVITA RECORRER TOODA LA LISTA.
-        # SE COMIENZA A BUSCAR DESDE EL PRIMER NÚMERO DEL RANGO. HAY MENOR COMPLEJIDAD.   
+        #SE COMIENZA A BUSCAR DESDE EL PRIMER NÚMERO DEL RANGO. HAY MENOR COMPLEJIDAD.   
         if artwork["DateAcquired"] != '':
             if int(artwork["DateAcquired"].replace('-','')) in range(inicio,fin+1):
 
@@ -183,6 +183,37 @@ def cronoArtwork(catalog,sublista, inicio, fin):
         headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
         tabla = tabulate(listReturn,headers=headers,tablefmt='grid',numalign='center')
         return (tabla,lt.size(FiltredList),purchasedCant,cantArtists)
+
+def artistPerTecnique(catalog,nombre):
+    
+    artistID=None
+    
+    for artistName in catalog['artist'['DisplayName']]:
+        if nombre in artistName:
+            artistID=catalog['artist'['ConstituentID']]
+            break
+        else:
+            return "No se encontró un artista con ese nombre."
+        
+    if artistID != None:
+        diccReturn=[]
+        listtecnica=lt.newList()
+        for artWorkArtist in catalog['artworks'['ConstituentID']]:
+            
+            if artWorkArtist.replace('[','').replace(']','')==artistID:
+                
+                diccReturn['TotalObras']+=1
+                listtecnica=lt.addLast(catalog,catalog['artworks'['Medium']])
+                diccReturn['Tecnicas']= listtecnica
+                diccReturn['Tecnica mayor']= 
+                
+
+
+def contadorTecnica(lista):
+    mayor={}
+
+    if len(mayor)==0:
+        mayor[lista[]]
 
 def ordenNacionalidad(catalog):
     artists = catalog['artists']
@@ -327,3 +358,5 @@ def selectInfo(position,ListArtworks,FiltredList,catalog):
                    department,classification,url]
 #       Se pone un nuevo registro con la info de cada obra en la lista grande declarada al inicio.
         FiltredList.append(artwork)
+
+
