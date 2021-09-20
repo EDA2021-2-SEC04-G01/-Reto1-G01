@@ -190,12 +190,18 @@ while True:
 #Requrimiento 5
     elif int(inputs[0]) == 6:
         dpto=input("Escriba el departamento del museo: ")
+        print(model.precioTransporte(catalog,'Drawings & Prints'))
 
 #Requirimiento 6
     elif int(inputs[0]) == 7:
         inicio=int(input("Escriba el año inicial: "))
         fin=int(input("Escriba el año final: "))
-        area= int(input("Escriba el área disponible en m\u00b2: "))
+        area= float(input("Escriba el área disponible en m\u00b2: "))
+
+        print("Searching artworks between {0} to {1}\n".format(inicio,fin))
+        print("With an available area of:{} m\u00b2".format(area))
+        lista=(controller.sortArtDates(catalog,lt.size(catalog['artworks']),'msort'))[0]
+        print(model.newExpo(lista,inicio,fin,area))
 
 
     else:

@@ -23,7 +23,7 @@
  *
  * Dario Correal - Version inicial
  """
-
+import math as m
 import textwrap
 import config as cf
 from DISClib.ADT import list as lt
@@ -103,9 +103,20 @@ def sortArtworksDates(catalog,cant,method):
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
     return (list_sort,elapsed_time_mseg)
-    
+
+def sortArtSize(catalog):
+    sa.sort(catalog['artists'],compareSize)
+
+def compareSize(art1,art2):
+    if art1['Height (cm)']!=None and art1['Height (cm)']!='' and art1['Width (cm)']!=None and art1['Width (cm)']!='':
+        if art2['Height (cm)']!=None and art2['Height (cm)']!='' and art2['Width (cm)']!=None and art2['Width (cm)']!='':
+            if float(art1['Height (cm)'])+float(art1['Width (cm)']) <  float(art2['Height (cm)'])+float(art2['Width (cm)']):
+                return 0
+            return -1
+        return -1
+    return -1   
 def compareNation(nation1,nation):
-    if(nation1 in nation['nationality']):
+    if(nation1 == nation['nationality']):
         return 0
     return -1
 
@@ -258,7 +269,90 @@ def addNation(catalog,nation_original,artwork):
   
     lt.addLast(nation['artworks'], artwork)
 
-    
+def newExpo(artworks,begin,end,area):
+   # artworks = catalog['artworks']
+    actual_area=0
+    list_artworks=lt.newList()
+    for artwork in lt.iterator(artworks):
+        fecha=artwork['Date']
+        if fecha!='' and fecha!=None:
+            if int(fecha) in range(begin,end+1):
+                if artwork['Department']=='Drawings & Prints' or artwork['Department']=='Photography':
+                    if artwork['Height (cm)']!=None and artwork['Height (cm)']!='' and artwork['Width (cm)']!=None and artwork['Width (cm)']!='':
+                        a_sumar=((float(artwork['Height (cm)'])/100)*(float(artwork['Width (cm)'])/100))  
+                        if actual_area+a_sumar<=area:
+                            actual_area+=a_sumar
+                            lt.addLast(list_artworks,artwork)
+                        else:
+                            break
+    return (lt.size(list_artworks),actual_area)
+
+
+# Req 5
+
+def check_none(artwork,clave):
+    if artwork[clave]!='' and artwork[clave]!=None:
+        return float(artwork[clave])/100
+    else:
+        return 0
+def cambiar_uno(variable):
+    if variable==0:
+        return 1
+    else:
+        return variable
+def precioTransporte(catalog,department):
+    artworks = catalog['artworks']
+    obTransporte = lt.newList()
+    precio = 0
+    estimado_peso=0
+    for artwork in lt.iterator(artworks):
+        dep = artwork['Department']
+        rad=0
+        if department.lower() == dep.lower():
+            op1=0
+            op2=0
+            op3=0
+            lt.addLast(obTransporte,artwork)
+            no_ceros=0
+            circ = check_none(artwork,'Circumference (cm)')
+            diam = check_none(artwork,'Diameter (cm)')
+            prof =  check_none(artwork,'Depth (cm)')
+            height =  check_none(artwork,'Height (cm)')
+            leng =  check_none(artwork,'Length (cm)')
+            width =  check_none(artwork,'Width (cm)')
+            peso=0
+            if artwork['Weight (kg)']!='' and artwork['Weight (kg)']!=None: 
+                peso =  float(artwork['Weight (kg)'])
+                estimado_peso+=peso
+
+            lista = [prof,height,leng,width]
+            for dato in lista:
+                if dato!=0:
+                    no_ceros+=1
+            if no_ceros>=2 or circ!=0 or peso!=0:
+                
+                prof = cambiar_uno(prof)
+                height = cambiar_uno(height)
+                leng = cambiar_uno(leng)
+                width = cambiar_uno(width)
+                if circ!=0:
+                    rad = circ/2*m.pi
+                elif diam!=0:
+                    rad = diam/2
+                    
+                if rad != 0:
+                    op1 = m.pow(rad,2)*m.pi*height*72
+
+                else:
+                    op2 = prof*height*leng*width*72
+
+                op3 = peso*72
+                actual_precio = max([op1,op2,op3])
+                precio += actual_precio
+            else:
+                precio+=48
+                
+    return (lt.size(obTransporte),round(estimado_peso,3),round(precio,3))
 
 def distribuir(elemento,cantidad):
     str_distribuido = '\n'.join((textwrap.wrap(elemento,cantidad)))
