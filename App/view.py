@@ -191,7 +191,7 @@ while True:
     elif int(inputs[0]) == 6:
         #TODO ejecutar esta cosa desde el controller, no de una desde el model
         dpto=input("Escriba el departamento del museo: ")
-        print(model.precioTransporte(catalog,'Drawings & Prints'))
+        print(model.precioTransporte(catalog,'Drawings & Prints')[3])
 
 #Requirimiento 6
     elif int(inputs[0]) == 7:
@@ -202,7 +202,7 @@ while True:
         print("With an available area of:{} m\u00b2".format(area))
         #TODO ejecutar esta cosa desde el controller, no de una desde el model
         lista=(controller.sortArtDates(catalog,lt.size(catalog['artworks']),'msort'))[0]
-        print(model.newExpo(lista,inicio,fin,area))
+        print(model.newExpo(lista,inicio,fin,area,catalog)[2])
 
 
     else:
