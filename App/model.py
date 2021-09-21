@@ -196,25 +196,37 @@ def artistPerTecnique(catalog,nombre):
             return "No se encontró un artista con ese nombre."
         
     if artistID != None:
-        diccReturn=[]
-        listtecnica=lt.newList()
+        diccReturn={}
+        listTecnica=lt.newList()
+        listaArtworkMax=lt.newList()
         for artWorkArtist in catalog['artworks'['ConstituentID']]:
             
-            if artWorkArtist.replace('[','').replace(']','')==artistID:
-                
+            if artistID in (artWorkArtist.replace('[','').replace(']','')).split(','):
+                mayor={}
                 diccReturn['TotalObras']+=1
-                listtecnica=lt.addLast(catalog,catalog['artworks'['Medium']])
-                diccReturn['Tecnicas']= listtecnica
-                diccReturn['Tecnica mayor']= 
-                
+                lt.addLast(listTecnica,catalog['artworks'['Medium']])
+                diccReturn['Tecnicas']= listTecnica
+                diccReturn['Tecnica mayor']= contadorTecnica(mayor,catalog['artworks'['Medium']])
 
+            if catalog['artworks'['Medium']]==diccReturn['Tecnica mayor']:
+               lt.addLast(listaArtworkMax,catalog['artworks'['Title']])        
 
-def contadorTecnica(lista):
-    mayor={}
+def contadorTecnica(mayor,tecnica):
+    maximo=None
 
     if len(mayor)==0:
-        mayor[lista[]]
+        mayor[tecnica]=1
+    elif tecnica in mayor:
+        mayor[tecnica]+=1
+    else:
+        mayor[tecnica]=1
 
+    maximo=max(mayor,key = mayor.get)
+
+    return maximo
+    
+    
+            
 def ordenNacionalidad(catalog):
     artists = catalog['artists']
     for artwork in lt.iterator(catalog['artworks']):
