@@ -39,7 +39,7 @@ Puede que haya algunas diferencias con los resultados mostrados en el ejemplo, s
 debido a que se usaron array list, lo que hace que funcione diferente el ordenamiento. Las cantidades, sin embargo son las mismas.
 """
 
-
+#TODO ¿mover la creación de la tabla para aquí?
 
 def printMenu():
     print("Bienvenido")
@@ -104,8 +104,7 @@ while True:
         fin=int(input("Escriba el año final: "))
         print("================= Req No. 1 Inputs ==================")
         print("\nArtist born between {} and {}.\n".format(inicio,fin))
-        #El 3 indica la cantidad de filas (inciales y finales) para poner en la tabla. En el model y el controller se llama tabsize
-        resultados= controller.cronoArtist(catalog,inicio,fin,3)
+        resultados= controller.cronoArtist(catalog,inicio,fin)
         if  "No hay" in resultados :
             print(resultados+"\n")
             break
@@ -181,6 +180,7 @@ while True:
         nameMajor = resultados[2]
         cantMajor = resultados[3]
         print(topNation)
+        s(2) #### Aquí lo pongo a esperar 2 segundos, únicamente es para que se pueda ver que está pasando con más calma
         print("The TOP nacionality in the museum is: {0} with {1} unique pieces.\nThe first and last 3 objects in the {0} artwork list are: ".format(nameMajor,str(cantMajor)))
         print(tablaOrden)
 
@@ -189,13 +189,20 @@ while True:
 
 #Requrimiento 5
     elif int(inputs[0]) == 6:
+        #TODO ejecutar esta cosa desde el controller, no de una desde el model
         dpto=input("Escriba el departamento del museo: ")
+        print(model.precioTransporte(catalog,'Drawings & Prints'))
 
 #Requirimiento 6
     elif int(inputs[0]) == 7:
         inicio=int(input("Escriba el año inicial: "))
         fin=int(input("Escriba el año final: "))
-        area= int(input("Escriba el área disponible en m\u00b2: "))
+        area= float(input("Escriba el área disponible en m\u00b2: "))
+        print("Searching artworks between {0} to {1}\n".format(inicio,fin))
+        print("With an available area of:{} m\u00b2".format(area))
+        #TODO ejecutar esta cosa desde el controller, no de una desde el model
+        lista=(controller.sortArtDates(catalog,lt.size(catalog['artworks']),'msort'))[0]
+        print(model.newExpo(lista,inicio,fin,area))
 
 
     else:

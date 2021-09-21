@@ -23,7 +23,7 @@
  *
  * Dario Correal - Version inicial
  """
-
+import math as m
 import textwrap
 import config as cf
 from DISClib.ADT import list as lt
@@ -82,13 +82,19 @@ def compareArtworks(artwork1,artwork):
         return 0
     return -1
 
-
+def compareQuantity(nation1,nation2):
+    return lt.size(nation1['artworks'])>lt.size(nation2['artworks'])
 
 def compareFechas(artist1,artist2):
     return (artist1['BeginDate']<artist2['BeginDate'])
 
 def compareArtDates(art1,art2):
     return (art1['DateAcquired']<art2['DateAcquired'])
+
+def compareNation(nation1,nation):
+    if(nation1 == nation['nationality']):
+        return 0
+    return -1
 
 # Funciones de ordenamiento
 
@@ -103,13 +109,14 @@ def sortArtworksDates(catalog,cant,method):
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
     return (list_sort,elapsed_time_mseg)
-    
-def compareNation(nation1,nation):
-    if(nation1 in nation['nationality']):
-        return 0
-    return -1
 
-def cronoArtist(catalog, inicio, fin,tabsize):
+
+def sortNation(nationality):
+    sa.sort(nationality,compareQuantity)
+
+
+#Req 1.
+def cronoArtist(catalog, inicio, fin):
 
     FiltredList=lt.newList()
     for artist in lt.iterator(catalog['artists']):
@@ -128,13 +135,14 @@ def cronoArtist(catalog, inicio, fin,tabsize):
         lstArtist=[]
         for position in range(1,4):
             selectArtist(position,FiltredList,lstArtist,catalog)
-        for position in range(lt.size(FiltredList)-tabsize,lt.size(FiltredList)+(tabsize-1)):
+        for position in range(lt.size(FiltredList)-2,lt.size(FiltredList)+1):
             selectArtist(position,FiltredList,lstArtist,catalog)
         headers = ['ConstituentID','DisplayName','BeginDate','Nationality','Gender','ArtistBio','Wiki QID','ULAN']
         tabla = tabulate(lstArtist,headers=headers,tablefmt='grid')
     return (tabla,artistCant)
+#↑↑↑Aquí termina el Req1 ↑↑↑
 
-
+#Req2.
 def cronoArtwork(catalog,sublista, inicio, fin):
     purchasedCant=0
     inicio=int(inicio.replace('-',''))
@@ -144,7 +152,8 @@ def cronoArtwork(catalog,sublista, inicio, fin):
     FiltredList=lt.newList()
     for artwork in lt.iterator(sublista):
         #RECORRER EL RANGO MEJOR, LUEGO USAR ISPRESENT. ASÍ SE EVITA RECORRER TOODA LA LISTA.
-        #SE COMIENZA A BUSCAR DESDE EL PRIMER NÚMERO DEL RANGO. HAY MENOR COMPLEJIDAD.   
+        # SE COMIENZA A BUSCAR DESDE EL PRIMER NÚMERO DEL RANGO. HAY MENOR COMPLEJIDAD.  
+        # TODO revisar la complejidad de esto si se recorre fecha por fecha y con un ispresent 
         if artwork["DateAcquired"] != '':
             if int(artwork["DateAcquired"].replace('-','')) in range(inicio,fin+1):
 
@@ -172,7 +181,6 @@ def cronoArtwork(catalog,sublista, inicio, fin):
     if lt.isEmpty(FiltredList):
         return "No hay obras de arte en el rango indicado"
     else:
-
         cantArtists = lt.size(artistList)
         listReturn = []
         for position in range(1,4):
@@ -183,7 +191,9 @@ def cronoArtwork(catalog,sublista, inicio, fin):
         headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
         tabla = tabulate(listReturn,headers=headers,tablefmt='grid',numalign='center')
         return (tabla,lt.size(FiltredList),purchasedCant,cantArtists)
+#↑↑↑Aquí termina el Req2.↑↑↑
 
+#REQ 3
 def artistPerTecnique(catalog,nombre):
     
     artistID=None
@@ -227,16 +237,14 @@ def contadorTecnica(mayor,tecnica):
     
     
             
+#Comienza el Req4.
 def ordenNacionalidad(catalog):
     artists = catalog['artists']
     for artwork in lt.iterator(catalog['artworks']):
-        
+
         idArtist = artwork['ConstituentID'].replace('[','').replace(']','').split(',')
-        
         for id in idArtist:
-
             id=id.strip()
-
             pos = lt.isPresent(artists,id)
             artist = lt.getElement(artists,pos)
             nation = artist['Nationality']
@@ -275,17 +283,9 @@ def nationArworks(catalog):
         tablaCant = tabulate(listCant,headers=['Nationality','Artworks'],tablefmt='grid',numalign='right')
         return (tablaCant,tabla,completeNationMajor['nationality'],lt.size(completeNationMajor['artworks']))
 
-
 def newNation(nationality):
     nation = {'nationality':nationality,'artworks':lt.newList('ARRAY_LIST',compareArtworks)}
     return nation
-
-def compareQuantity(nation1,nation2):
-    return lt.size(nation1['artworks'])>lt.size(nation2['artworks'])
-
-def sortNation(nationality):
-    sa.sort(nationality,compareQuantity)
-
 
 def addNation(catalog,nation_original,artwork):
     if nation_original=="":
@@ -300,53 +300,148 @@ def addNation(catalog,nation_original,artwork):
         lt.addLast(catalog['nationalities'], nation)
   
     lt.addLast(nation['artworks'], artwork)
+#↑↑↑Aquí termina el req4.↑↑↑
 
-    
+# Req 5
+#TODO retornar todos los valores que se piden en el pdf
+def check_none(artwork,clave):
+    if artwork[clave]!='' and artwork[clave]!=None:
+        return float(artwork[clave])/100
+    else:
+        return 0
+def cambiar_uno(variable):
+    if variable==0:
+        return 1
+    else:
+        return variable
+def precioTransporte(catalog,department):
+    artworks = catalog['artworks']
+    obTransporte = lt.newList()
+    precio = 0
+    estimado_peso=0
+    for artwork in lt.iterator(artworks):
+        dep = artwork['Department']
+        rad=0
+        if department.lower() == dep.lower():
+            op1=0
+            op2=0
+            op3=0
+            lt.addLast(obTransporte,artwork)
+            no_ceros=0
+            circ = check_none(artwork,'Circumference (cm)')
+            diam = check_none(artwork,'Diameter (cm)')
+            prof =  check_none(artwork,'Depth (cm)')
+            height =  check_none(artwork,'Height (cm)')
+            leng =  check_none(artwork,'Length (cm)')
+            width =  check_none(artwork,'Width (cm)')
+            peso=0
+            if artwork['Weight (kg)']!='' and artwork['Weight (kg)']!=None: 
+                peso =  float(artwork['Weight (kg)'])
+                estimado_peso+=peso
 
+            lista = [prof,height,leng,width]
+            for dato in lista:
+                if dato!=0:
+                    no_ceros+=1
+            if no_ceros>=2 or circ!=0 or peso!=0:
+                
+                prof = cambiar_uno(prof)
+                height = cambiar_uno(height)
+                leng = cambiar_uno(leng)
+                width = cambiar_uno(width)
+                if circ!=0:
+                    rad = circ/2*m.pi
+                elif diam!=0:
+                    rad = diam/2
+                    
+                if rad != 0:
+                    op1 = m.pow(rad,2)*m.pi*height*72
+
+                else:
+                    op2 = prof*height*leng*width*72
+
+                op3 = peso*72
+                actual_precio = max([op1,op2,op3])
+                precio += actual_precio
+            else:
+                precio+=48
+                
+    return (lt.size(obTransporte),round(estimado_peso,3),round(precio,3))
+#Termina el Req 5
+
+
+# Req 6
+#TODO retornar todos los valores que piden en el pdf
+def newExpo(artworks,begin,end,area):
+    actual_area=0
+    list_artworks=lt.newList()
+    for artwork in lt.iterator(artworks):
+        fecha=artwork['Date']
+        if fecha!='' and fecha!=None:
+            a_sumar=None
+            if int(fecha) in range(begin,end+1):
+                circ = check_none(artwork,'Circumference (cm)')
+                diam = check_none(artwork,'Diameter (cm)')
+                prof =  check_none(artwork,'Depth (cm)')
+                height =  check_none(artwork,'Height (cm)')
+                leng =  check_none(artwork,'Length (cm)')
+                width =  check_none(artwork,'Width (cm)')
+
+                if prof==0  and (diam == 0 or circ==0):
+                    if height!=0 and width!=0 and leng==0:
+                        a_sumar=height*width
+
+                    elif height!=0 and width==0 and leng!=0:
+                        a_sumar=height*leng
+
+                    elif width!=0 and leng!=0 and height==0:
+                        a_sumar=width*leng
+
+                    if a_sumar!=None:
+                        if actual_area+a_sumar<=area:
+                            actual_area+=a_sumar
+                            lt.addLast(list_artworks,artwork)
+
+    return (lt.size(list_artworks),round(actual_area,3))
+#↑↑↑Termina el Req 6↑↑↑
+
+#TODO mover esto para otro lado porque en el model no se ve bien.
+#↓↓↓Esto de acá es para el formatting de las tablas ↓↓↓
 def distribuir(elemento,cantidad):
     str_distribuido = '\n'.join((textwrap.wrap(elemento,cantidad)))
     return str_distribuido
 
+def chkUnknown(origen,clave):
+    if origen[clave]==None or origen[clave]=='': return 'Unknown'
+    else: return origen[clave]
 
 def selectArtist(position,ArtistList,lstArtistEnd,catalog):
     artist = lt.getElement(ArtistList,position)
     ConstID = artist['ConstituentID']
     name=distribuir(artist['DisplayName'],15)
-    bgndate=artist['BeginDate']
-    nationality=artist['Nationality']
-    gender=artist['Gender']
-    bio=artist['ArtistBio']
-    qid=artist['Wiki QID']
-    ulan = artist['ULAN']
 
-    if qid == None or qid == '': qid='Unknown'
-    if ulan == None or ulan == '': ulan='Unknown'
-    if nationality == None or nationality == '': nationality='Unknown'
-    if gender == None or gender == '': gender='Unknown'
-    if bgndate == None or bgndate == '': bgndate='Unknown'
-    if bio == None or bio == '': bio='Unknown'
+    bgndate=chkUnknown(artist,'BeginDate')
+    nationality=chkUnknown(artist,'Nationality')
+    gender=chkUnknown(artist,'Gender')
+    bio=chkUnknown(artist,'ArtistBio')
+    qid=chkUnknown(artist,'Wiki QID')
+    ulan = chkUnknown(artist,'ULAN')
 
     artistInfo=[ConstID,name,bgndate,nationality,gender,bio,qid,ulan]
     lstArtistEnd.append(artistInfo)
 
 def selectInfo(position,ListArtworks,FiltredList,catalog):
 #       ↓↓↓ Todo este montón de líneas se encargan de sacar la info. necesaria del diccionario grande y con textwrap lo separa en líneas de un igual tamaño.
-        
-
         artwork = lt.getElement(ListArtworks,position)
 
         objectID = artwork['ObjectID']
-        title=distribuir(artwork['Title'],10)
-        date=distribuir(artwork['Date'],10)
-        medium=distribuir(artwork['Medium'],20)
-        dimensions=distribuir(artwork['Dimensions'],20)
-        department=distribuir(artwork['Department'],15)
-        classification=distribuir(artwork['Classification'],15)
-
-        url = artwork['URL'] 
-        if url == None or url == '': #esto de acá solo hace que se vuelva Unknown si está vacía la casilla de url
-            url ='Unknown'
-        url='\n'.join(((textwrap.wrap(url,15))))
+        title=distribuir(chkUnknown(artwork,'Title'),10)
+        date=distribuir(chkUnknown(artwork,'Date'),10)
+        medium=distribuir(chkUnknown(artwork,'Medium'),20)
+        dimensions=distribuir(chkUnknown(artwork,'Dimensions'),20)
+        department=distribuir(chkUnknown(artwork,'Department'),15)
+        classification=distribuir(chkUnknown(artwork,'Classification'),15)
+        url = distribuir(chkUnknown(artwork,'URL'),15)
 
 #       Aquí se recorren internamente los artistas que tenga cada obra para luego buscarlos en el archivo artists y sacar sus nombres.
         artists = ""
@@ -363,6 +458,7 @@ def selectInfo(position,ListArtworks,FiltredList,catalog):
             else:
                 artists+=", "+artist
 #       Se vuelve a hacer lo de antes para separar con una cantidad exacta de lineas.
+        artists=chkUnknown(artists)
         artists=distribuir(artists,15)
 
 #       Se crea una lista con todo lo que pide el requerimiento.
@@ -370,5 +466,4 @@ def selectInfo(position,ListArtworks,FiltredList,catalog):
                    department,classification,url]
 #       Se pone un nuevo registro con la info de cada obra en la lista grande declarada al inicio.
         FiltredList.append(artwork)
-
-
+#↑↑↑ Termina el formatting de las tablas ↑↑↑
