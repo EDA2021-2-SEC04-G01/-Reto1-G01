@@ -39,7 +39,7 @@ Puede que haya algunas diferencias con los resultados mostrados en el ejemplo, s
 debido a que se usaron array list, lo que hace que funcione diferente el ordenamiento. Las cantidades, sin embargo son las mismas.
 """
 
-
+#TODO ¿mover la creación de la tabla para aquí?
 
 def printMenu():
     print("Bienvenido")
@@ -189,6 +189,7 @@ while True:
 
 #Requrimiento 5
     elif int(inputs[0]) == 6:
+        #TODO ejecutar esta cosa desde el controller, no de una desde el model
         dpto=input("Escriba el departamento del museo: ")
         print(model.precioTransporte(catalog,'Drawings & Prints'))
 
@@ -197,9 +198,9 @@ while True:
         inicio=int(input("Escriba el año inicial: "))
         fin=int(input("Escriba el año final: "))
         area= float(input("Escriba el área disponible en m\u00b2: "))
-
         print("Searching artworks between {0} to {1}\n".format(inicio,fin))
         print("With an available area of:{} m\u00b2".format(area))
+        #TODO ejecutar esta cosa desde el controller, no de una desde el model
         lista=(controller.sortArtDates(catalog,lt.size(catalog['artworks']),'msort'))[0]
         print(model.newExpo(lista,inicio,fin,area))
 

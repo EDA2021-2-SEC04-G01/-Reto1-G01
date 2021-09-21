@@ -151,7 +151,8 @@ def cronoArtwork(catalog,sublista, inicio, fin):
     FiltredList=lt.newList()
     for artwork in lt.iterator(sublista):
         #RECORRER EL RANGO MEJOR, LUEGO USAR ISPRESENT. ASÍ SE EVITA RECORRER TOODA LA LISTA.
-        # SE COMIENZA A BUSCAR DESDE EL PRIMER NÚMERO DEL RANGO. HAY MENOR COMPLEJIDAD.   
+        # SE COMIENZA A BUSCAR DESDE EL PRIMER NÚMERO DEL RANGO. HAY MENOR COMPLEJIDAD.  
+        # TODO revisar la complejidad de esto si se recorre fecha por fecha y con un ispresent 
         if artwork["DateAcquired"] != '':
             if int(artwork["DateAcquired"].replace('-','')) in range(inicio,fin+1):
 
@@ -206,7 +207,7 @@ def ordenNacionalidad(catalog):
             addNation(catalog,nation,artwork)
   
     sortNation(catalog['nationalities'])
-    
+
 def nationArworks(catalog):
 #       Aquí inicio declarando las variables con las que voy a trabajar, obteniendo del catálogo lo que 
 #       se necesita y demás.        
@@ -257,6 +258,7 @@ def addNation(catalog,nation_original,artwork):
 #↑↑↑Aquí termina el req4.↑↑↑
 
 # Req 5
+#TODO retornar todos los valores que se piden en el pdf
 def check_none(artwork,clave):
     if artwork[clave]!='' and artwork[clave]!=None:
         return float(artwork[clave])/100
@@ -324,6 +326,7 @@ def precioTransporte(catalog,department):
 
 
 # Req 6
+#TODO retornar todos los valores que piden en el pdf
 def newExpo(artworks,begin,end,area):
     actual_area=0
     list_artworks=lt.newList()
@@ -357,7 +360,7 @@ def newExpo(artworks,begin,end,area):
     return (lt.size(list_artworks),round(actual_area,3))
 #↑↑↑Termina el Req 6↑↑↑
 
-
+#TODO mover esto para otro lado porque en el model no se ve bien.
 #↓↓↓Esto de acá es para el formatting de las tablas ↓↓↓
 def distribuir(elemento,cantidad):
     str_distribuido = '\n'.join((textwrap.wrap(elemento,cantidad)))
@@ -384,8 +387,6 @@ def selectArtist(position,ArtistList,lstArtistEnd,catalog):
 
 def selectInfo(position,ListArtworks,FiltredList,catalog):
 #       ↓↓↓ Todo este montón de líneas se encargan de sacar la info. necesaria del diccionario grande y con textwrap lo separa en líneas de un igual tamaño.
-        
-
         artwork = lt.getElement(ListArtworks,position)
 
         objectID = artwork['ObjectID']

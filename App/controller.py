@@ -25,7 +25,7 @@ import config as cf
 import model
 import csv
 
-
+#TODO revisar por qué no se ordenan las fechas de los artwork globalmente
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -91,3 +91,5 @@ def cronoArtworks(catalog,inicio,fin,cant,method):
 
 def nationArworks(catalog):
     return (model.nationArworks(catalog))
+
+#TODO agregar req5 y req6 aquí
