@@ -406,8 +406,10 @@ def precioTransporte(catalog,department):
 def newExpo(artworks,begin,end,area,catalog):
     listArtworksEnd=[]
     actual_area=0
+    total=0
     list_artworks=lt.newList()
     for artwork in lt.iterator(artworks):
+        total+=1
         fecha=artwork['Date']
         if fecha!='' and fecha!=None:
             a_sumar=None
@@ -447,7 +449,7 @@ def newExpo(artworks,begin,end,area,catalog):
     table = tabulate(listArtworksEnd, headers=headers, tablefmt='grid',numalign='center')
                     
 
-    return (lt.size(list_artworks),round(actual_area,3),table)
+    return (total,lt.size(list_artworks),round(actual_area,3),table)
 #↑↑↑Termina el Req 6↑↑↑
 
 #TODO mover esto para otro lado porque en el model no se ve bien.

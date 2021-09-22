@@ -150,17 +150,17 @@ while True:
                 "Por favor inserte un número válido"
         
         tiempo = controller.cronoArtworks(catalog,inicio,fin,subsize,method)[1]
-        # resultado = controller.cronoArtworks(catalog,inicio,fin,subsize,method)[0]
-        # tabla = resultado[0]
-        # cantObras = resultado[1]
-        # cantCompradas = resultado[2]
-        # cantArtists = resultado[3]
-        # print("=================== Req No. 2 Inputs =====================\n")
-        # print("Artworks acquired between {0} and {1}".format(inicio,fin))
-        # print("=================== Req No. 2 Answer =====================\n\n")
-        # print("The MoMA acquired {0} unique pieces between {1} and {2}\n".format(str(cantObras),inicio,fin))
-        # print("With {0} different artists and purchased {1} of them.\n\nThe first and last 3 artworks in the range are... ".format(cantArtists,cantCompradas))
-        # print(tabla)
+        resultado = controller.cronoArtworks(catalog,inicio,fin,subsize,method)[0]
+        tabla = resultado[0]
+        cantObras = resultado[1]
+        cantCompradas = resultado[2]
+        cantArtists = resultado[3]
+        print("=================== Req No. 2 Inputs =====================\n")
+        print("Artworks acquired between {0} and {1}".format(inicio,fin))
+        print("=================== Req No. 2 Answer =====================\n\n")
+        print("The MoMA acquired {0} unique pieces between {1} and {2}\n".format(str(cantObras),inicio,fin))
+        print("With {0} different artists and purchased {1} of them.\n\nThe first and last 3 artworks in the range are... ".format(cantArtists,cantCompradas))
+        print(tabla)
         print("El tiempo gastado fue {}".format(tiempo))
 
 #Requerimiento 3
@@ -189,20 +189,39 @@ while True:
 
 #Requrimiento 5
     elif int(inputs[0]) == 6:
-        #TODO ejecutar esta cosa desde el controller, no de una desde el model
         dpto=input("Escriba el departamento del museo: ")
-        print(model.precioTransporte(catalog,'Drawings & Prints')[3])
-
+        print("\n=================Req No. 5 Inputs ====================\n ")
+        print("Estimate the cost to transport all artifacts in {} MoMA's Departament . . .\n".format(dpto))
+        rta=controller.precioTransporte(catalog,dpto)
+        print("================ Req No. 5 Answer ================\n")
+        print("The MoMA is going to transport {0} artifacts from the {1} department. ".format(rta[0],dpto))
+        print("REMEMBER!, NOT all MoMA's data is complete! ! !... These are estimates.  ")
+        print("Estimated cargo weight (kg): "+str(rta[1]))
+        print("Estimated cargo cost (USD): "+str(rta[2]))
+        print("\nThe TOP 5 most expensive items to transport are:")
+        print(controller.precioTransporte(catalog,dpto)[3])
+        print("\nThe TOP 5 oldest items to tranport are: ")
+        print(controller.precioTransporte(catalog,dpto)[4])
 #Requirimiento 6
     elif int(inputs[0]) == 7:
         inicio=int(input("Escriba el año inicial: "))
         fin=int(input("Escriba el año final: "))
         area= float(input("Escriba el área disponible en m\u00b2: "))
-        print("Searching artworks between {0} to {1}\n".format(inicio,fin))
-        print("With an available area of:{} m\u00b2".format(area))
-        #TODO ejecutar esta cosa desde el controller, no de una desde el model
+        print("\n=================Req No. 6 (BONUS) Inputs ====================\n ")
+        print("Searching artworks between {0} to {1}".format(inicio,fin))
+        print("With an available area of:{} m\u00b2 \n".format(area))
+        #Se ordena la lista por fecha de adquisición. 
         lista=(controller.sortArtDates(catalog,lt.size(catalog['artworks']),'msort'))[0]
-        print(model.newExpo(lista,inicio,fin,area,catalog)[2])
+        rta=controller.newExpo(lista,inicio,fin,area,catalog)
+        print("================ Req No. 6 (BONUS) Answer ================\n")
+        print("The MoMA is going to exhibit pieces from {0} to {1}".format(inicio,fin)) 
+        print("There are {} possible items in an available area of: {} m\u00b2".format(rta[0],area))
+        print("The possible exhibit has {} items.".format(rta[1]))
+        print("Filling {0} m\u00b2 of the {1} m\u00b2 available.".format(rta[2],area))
+        print("The first and last 3 objects in the American artwork list are: \n")
+        print(rta[3])
+        
+
 
 
     else:

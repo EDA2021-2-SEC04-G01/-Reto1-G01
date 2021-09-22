@@ -92,4 +92,9 @@ def cronoArtworks(catalog,inicio,fin,cant,method):
 def nationArworks(catalog):
     return (model.nationArworks(catalog))
 
-#TODO agregar req5 y req6 aquí
+def precioTransporte(catalog,department):
+    return model.precioTransporte(catalog,department)
+
+def newExpo(artworks,begin,end,area,catalog):
+    return model.newExpo(artworks,begin,end,area,catalog)
+
