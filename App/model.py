@@ -226,8 +226,9 @@ def artistPerTecnique(catalog,nombre):
         
         for artWork in lt.iterator(catalog['artworks']):
             artWorkArtist=artWork['ConstituentID'].replace('[','').replace(']','').split(',')
-            print(artWorkArtist)
+            print(type(artWorkArtist))
             print(type(artistID))
+            
             if artistID in artWorkArtist:
                 print('full')
                 mayor={}
