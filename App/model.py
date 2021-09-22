@@ -215,19 +215,19 @@ def artistPerTecnique(catalog,nombre):
         if nombre in artistName:
             artistID=name['ConstituentID']
             break
-        else:
-            return "No se encontró un artista con ese nombre."
         
-    if artistID != None:
-        diccReturn={}
+    if artistID == None:
+        return "No se encontró un artista con ese nombre."
+    else:
+        diccReturn={'TotalObras':0}
         listTecnica=lt.newList()
         listaArtworkMax=lt.newList()
         listaAllArtworks=lt.newList()
         
         for artWork in lt.iterator(catalog['artworks']):
-            artWorkArtist=artWork['ConstituentID'].replace('[','').replace(']','').split(',')
-            print(type(artWorkArtist))
-            print(type(artistID))
+            artWorkArtist=artWork['ConstituentID'].replace('[','').replace(']','').replace(' ','').split(',')
+            print(artWorkArtist)
+            print(artistID)
             
             if artistID in artWorkArtist:
                 print('full')
