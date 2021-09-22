@@ -226,11 +226,9 @@ def artistPerTecnique(catalog,nombre):
         
         for artWork in lt.iterator(catalog['artworks']):
             artWorkArtist=artWork['ConstituentID'].replace('[','').replace(']','').replace(' ','').split(',')
-            print(artWorkArtist)
-            print(artistID)
-            
+                        
             if artistID in artWorkArtist:
-                print('full')
+                
                 mayor={}
                 lt.addLast(listaAllArtworks, artWork['Title'])
                 diccReturn['Obras']=listaAllArtworks
@@ -242,15 +240,11 @@ def artistPerTecnique(catalog,nombre):
                 if artWork['Medium']==diccReturn['Tecnica mayor']:
                     lt.addLast(listaArtworkMax,artWork['Title'])
                     diccReturn['ObrasMayor']=listaArtworkMax
-                print(listaAllArtworks)
-        print(diccReturn)
+                
         return diccReturn
 
 
-#    for position in range(lt.size(listaAllArtworks)):
-#        selectInfo(position,listaAllArtworks,listArtworksEnd,catalog)    
-#    headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
-#    tabla=(tabulate(listArtworksEnd, headers=headers, tablefmt='grid',numalign='center'))
+
 
 
 def contadorTecnica(mayor,tecnica):
