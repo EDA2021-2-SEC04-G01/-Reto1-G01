@@ -88,6 +88,12 @@ def compareQuantity(nation1,nation2):
 def compareFechas(artist1,artist2):
     return (artist1['BeginDate']<artist2['BeginDate'])
 
+def compareYears(artwork1,artwork2):
+    return artwork1['Date']>artwork2['Date']
+
+def comparePrices(artwork1,artwork2):
+    return artwork1['Price']>artwork2['Price']
+
 def compareArtDates(art1,art2):
     return (art1['DateAcquired']<art2['DateAcquired'])
 
@@ -100,6 +106,9 @@ def compareNation(nation1,nation):
 
 def sortDates(catalog):
     sa.sort(catalog['artists'],compareFechas)
+
+def sortArtYears(catalog):
+    sa.sort(catalog['artworks'],compareYears)
 
 def sortArtworksDates(catalog,cant,method):
 
@@ -114,6 +123,9 @@ def sortArtworksDates(catalog,cant,method):
 def sortNation(nationality):
     sa.sort(nationality,compareQuantity)
 
+
+def sortArtPrice(artworks):
+    sa.sort(artworks,comparePrices)
 
 #Req 1.
 def cronoArtist(catalog, inicio, fin):
@@ -184,10 +196,10 @@ def cronoArtwork(catalog,sublista, inicio, fin):
         cantArtists = lt.size(artistList)
         listReturn = []
         for position in range(1,4):
-            selectInfo(position,FiltredList,listReturn,catalog)
+            selectInfo(position,FiltredList,listReturn,catalog,False,False)
 
         for position in range(lt.size(FiltredList)-2,lt.size(FiltredList)+1):
-            selectInfo(position,FiltredList,listReturn,catalog)
+            selectInfo(position,FiltredList,listReturn,catalog,False,False)
         headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
         tabla = tabulate(listReturn,headers=headers,tablefmt='grid',numalign='center')
         return (tabla,lt.size(FiltredList),purchasedCant,cantArtists)
@@ -285,10 +297,10 @@ def nationArworks(catalog):
 
 #       Este ciclo se encarga de recorrer todos los elementos de la nacionalidad con mayor cantidad de obras.        
         for position in range(1,4):
-            selectInfo(position,nationMajor,listArtworksEnd,catalog)
+            selectInfo(position,nationMajor,listArtworksEnd,catalog,False,False)
 
         for position in range(lt.size(nacionalidadesFull)-3,lt.size(nacionalidadesFull)):
-            selectInfo(position,nationMajor,listArtworksEnd,catalog)
+            selectInfo(position,nationMajor,listArtworksEnd,catalog,False,False)
             
 #       Se hacen los headers, para ponerlos en la tabla
         headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
@@ -337,7 +349,9 @@ def cambiar_uno(variable):
         return variable
 def precioTransporte(catalog,department):
     artworks = catalog['artworks']
-    obTransporte = lt.newList()
+    listbyPrice=[] #Estas dos listas son para pasarle al módulo tabulate
+    listbyDate=[]
+    obrasTransport = lt.newList()
     precio = 0
     estimado_peso=0
     for artwork in lt.iterator(artworks):
@@ -347,7 +361,7 @@ def precioTransporte(catalog,department):
             op1=0
             op2=0
             op3=0
-            lt.addLast(obTransporte,artwork)
+            lt.addLast(obrasTransport,artwork)
             no_ceros=0
             circ = check_none(artwork,'Circumference (cm)')
             diam = check_none(artwork,'Diameter (cm)')
@@ -383,23 +397,42 @@ def precioTransporte(catalog,department):
 
                 op3 = peso*72
                 actual_precio = max([op1,op2,op3])
+                artwork['Price']=actual_precio
                 precio += actual_precio
             else:
+                artwork['Price']=48
                 precio+=48
-                
-    return (lt.size(obTransporte),round(estimado_peso,3),round(precio,3))
+
+    sortArtPrice(obrasTransport)
+    for pos in range(1,6):
+        selectInfo(pos,obrasTransport,listbyPrice,catalog,True,False)
+    
+    sortArtYears(catalog)
+    for pos in range(1,6):
+        selectInfo(pos,obrasTransport,listbyDate,catalog,True,False)
+
+
+    headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','TransCost','Classification','URL']
+
+    tablePrice = tabulate(listbyPrice, headers=headers, tablefmt='grid',numalign='center')
+    
+    tableDates = tabulate(listbyDate, headers=headers, tablefmt='grid',numalign='center')
+    
+    return (lt.size(obrasTransport),round(estimado_peso,3),round(precio,3),tablePrice,tableDates)
 #Termina el Req 5
 
 
 # Req 6
 #TODO retornar todos los valores que piden en el pdf
-def newExpo(artworks,begin,end,area):
+def newExpo(artworks,begin,end,area,catalog):
+    listArtworksEnd=[]
     actual_area=0
     list_artworks=lt.newList()
     for artwork in lt.iterator(artworks):
         fecha=artwork['Date']
         if fecha!='' and fecha!=None:
             a_sumar=None
+            area_add=None
             if int(fecha) in range(begin,end+1):
                 circ = check_none(artwork,'Circumference (cm)')
                 diam = check_none(artwork,'Diameter (cm)')
@@ -422,8 +455,20 @@ def newExpo(artworks,begin,end,area):
                         if actual_area+a_sumar<=area:
                             actual_area+=a_sumar
                             lt.addLast(list_artworks,artwork)
+                        area_add=a_sumar
+                        artwork['Area']=area_add
+    headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','EstArea (m\u00b2)','Classification','URL']
 
-    return (lt.size(list_artworks),round(actual_area,3))
+    for pos in range(1,6):
+         selectInfo(pos,list_artworks,listArtworksEnd,catalog,False,True)
+
+    for pos in range(lt.size(list_artworks)-4,lt.size(list_artworks)+1):
+         selectInfo(pos,list_artworks,listArtworksEnd,catalog,False,True)
+
+    table = tabulate(listArtworksEnd, headers=headers, tablefmt='grid',numalign='center')
+                    
+
+    return (lt.size(list_artworks),round(actual_area,3),table)
 #↑↑↑Termina el Req 6↑↑↑
 
 #TODO mover esto para otro lado porque en el model no se ve bien.
@@ -451,7 +496,7 @@ def selectArtist(position,ArtistList,lstArtistEnd,catalog):
     artistInfo=[ConstID,name,bgndate,nationality,gender,bio,qid,ulan]
     lstArtistEnd.append(artistInfo)
 
-def selectInfo(position,ListArtworks,FiltredList,catalog):
+def selectInfo(position,ListArtworks,FiltredList,catalog,prices:bool,areas:bool):
 #       ↓↓↓ Todo este montón de líneas se encargan de sacar la info. necesaria del diccionario grande y con textwrap lo separa en líneas de un igual tamaño.
         artwork = lt.getElement(ListArtworks,position)
 
@@ -479,12 +524,22 @@ def selectInfo(position,ListArtworks,FiltredList,catalog):
             else:
                 artists+=", "+artist
 #       Se vuelve a hacer lo de antes para separar con una cantidad exacta de lineas.
-        artists=chkUnknown(artists)
+        if artists==None or artists=='':
+            artists='Unknown'
         artists=distribuir(artists,15)
 
 #       Se crea una lista con todo lo que pide el requerimiento.
-        artwork = [objectID,title,artists,medium,dimensions,date,
+
+        artwork_entrega = [objectID,title,artists,medium,dimensions,date,
                    department,classification,url]
+        if prices:
+            price = chkUnknown(artwork,'Price')
+            artwork_entrega = [objectID,title,artists,medium,dimensions,date,
+            price,classification,url]
+        if areas:
+            area = chkUnknown(artwork,'Area')
+            artwork_entrega = [objectID,title,artists,medium,dimensions,date,department,
+            area,classification,url]
 #       Se pone un nuevo registro con la info de cada obra en la lista grande declarada al inicio.
-        FiltredList.append(artwork)
+        FiltredList.append(artwork_entrega)
 #↑↑↑ Termina el formatting de las tablas ↑↑↑
