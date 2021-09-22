@@ -98,3 +98,6 @@ def precioTransporte(catalog,department):
 def newExpo(artworks,begin,end,area,catalog):
     return model.newExpo(artworks,begin,end,area,catalog)
 
+def artworkPorTecnica(nombre,catalog):
+    return(model.artistPerTecnique(catalog,nombre))
+#TODO agregar req5 y req6 aquí

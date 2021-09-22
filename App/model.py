@@ -210,9 +210,10 @@ def artistPerTecnique(catalog,nombre):
     
     artistID=None
     
-    for artistName in catalog['artist'['DisplayName']]:
+    for name in lt.iterator(catalog['artists']):
+        artistName = name['DisplayName']
         if nombre in artistName:
-            artistID=catalog['artist'['ConstituentID']]
+            artistID=name['ConstituentID']
             break
         else:
             return "No se encontró un artista con ese nombre."
@@ -221,17 +222,36 @@ def artistPerTecnique(catalog,nombre):
         diccReturn={}
         listTecnica=lt.newList()
         listaArtworkMax=lt.newList()
-        for artWorkArtist in catalog['artworks'['ConstituentID']]:
+        listaAllArtworks=lt.newList()
+        
+        for artWork in lt.iterator(catalog['artworks']):
+            artWorkArtist=artWork['ConstituentID'].replace('[','').replace(']','').split(',')
+            print(type(artWorkArtist))
+            print(type(artistID))
             
-            if artistID in (artWorkArtist.replace('[','').replace(']','')).split(','):
+            if artistID in artWorkArtist:
+                print('full')
                 mayor={}
+                lt.addLast(listaAllArtworks, artWork['Title'])
+                diccReturn['Obras']=listaAllArtworks
                 diccReturn['TotalObras']+=1
-                lt.addLast(listTecnica,catalog['artworks'['Medium']])
+                lt.addLast(listTecnica,artWork['Medium'])
                 diccReturn['Tecnicas']= listTecnica
-                diccReturn['Tecnica mayor']= contadorTecnica(mayor,catalog['artworks'['Medium']])
+                diccReturn['Tecnica mayor']= contadorTecnica(mayor,artWork['Medium'])
 
-            if catalog['artworks'['Medium']]==diccReturn['Tecnica mayor']:
-               lt.addLast(listaArtworkMax,catalog['artworks'['Title']])        
+                if artWork['Medium']==diccReturn['Tecnica mayor']:
+                    lt.addLast(listaArtworkMax,artWork['Title'])
+                    diccReturn['ObrasMayor']=listaArtworkMax
+                print(listaAllArtworks)
+        print(diccReturn)
+        return diccReturn
+
+
+#    for position in range(lt.size(listaAllArtworks)):
+#        selectInfo(position,listaAllArtworks,listArtworksEnd,catalog)    
+#    headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
+#    tabla=(tabulate(listArtworksEnd, headers=headers, tablefmt='grid',numalign='center'))
+
 
 def contadorTecnica(mayor,tecnica):
     maximo=None
@@ -246,6 +266,8 @@ def contadorTecnica(mayor,tecnica):
     maximo=max(mayor,key = mayor.get)
 
     return maximo
+
+
     
     
             
