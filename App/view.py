@@ -166,6 +166,13 @@ while True:
 #Requerimiento 3
     elif int(inputs[0]) == 4:
         artista = input("Escriba el nombre del artista: ")
+        ReturnModel=controller.artworkPorTecnica(artista, catalog)
+        if type(ReturnModel) is dict:            
+            print('Para el artista '+str(artista)+' hay:\n'+ '-' + str(ReturnModel['TotalObras'])+'\n'+ '-Con las siguientes tecnicas'+str(ReturnModel['Tecnicas'])+'\n'+ '-La tecnica más utilizada es ' +str(ReturnModel['Tecnica mayor'])+'\n'+'-Las obras con la tecnica más utilizada son: '+str(ReturnModel['ObrasMayor']))
+        elif type(ReturnModel) is str:
+            print(ReturnModel)
+        
+    
 
 
 #Requerimiento 4
