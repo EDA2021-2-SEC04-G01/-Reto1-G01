@@ -205,7 +205,7 @@ def cronoArtwork(catalog,sublista, inicio, fin):
         return (tabla,lt.size(FiltredList),purchasedCant,cantArtists)
 #↑↑↑Aquí termina el Req2.↑↑↑
 
-#REQ 3
+#REQ 3 ELABORADO POR DANIEL MOLANO - 202012695
 def artistPerTecnique(catalog,nombre):
     
     artistID=None
