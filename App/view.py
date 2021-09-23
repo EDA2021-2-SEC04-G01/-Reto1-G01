@@ -122,6 +122,7 @@ while True:
 
 ##Requerimiento 2
     elif int(inputs[0]) == 3:
+        start_time = time.process_time()
         inicio=(input("Escriba la fecha de inicio: "))
         fin=(input("Escriba la fecha final: "))
         activo = True
@@ -167,20 +168,28 @@ while True:
         print(tabla)
         print("El tiempo gastado fue {}".format(tiempo))
 
+        stop_time = time.process_time()
+        elapsed_time_mseg = (stop_time - start_time)*1000
+        print(''.join("El tiempo usado completo fue",elapsed_time_mseg))
+
 #Requerimiento 3
     elif int(inputs[0]) == 4:
+        start_time = time.process_time()
         artista = input("Escriba el nombre del artista: ")
         ReturnModel=controller.artworkPorTecnica(artista, catalog)
         if type(ReturnModel) is dict:            
             print('Para el artista '+str(artista)+' hay:\n'+ '-' + str(ReturnModel['TotalObras'])+'\n'+ '-Con las siguientes tecnicas'+str(ReturnModel['Tecnicas'])+'\n'+ '-La tecnica más utilizada es ' +str(ReturnModel['Tecnica mayor'])+'\n'+'-Las obras con la tecnica más utilizada son: '+str(ReturnModel['ObrasMayor']))
         elif type(ReturnModel) is str:
             print(ReturnModel)
-        
+        stop_time = time.process_time()
+        elapsed_time_mseg = (stop_time - start_time)*1000
+        print(elapsed_time_mseg)
     
 
 
 #Requerimiento 4
     elif int(inputs[0]) == 5:
+        start_time = time.process_time()
         print("=================Req No. 4 Inputs ====================\n ")
         print("Ranking countries by their number of Artworks in the MoMA...\n")
         resultados = controller.nationArworks(catalog)
@@ -194,12 +203,15 @@ while True:
         s(2) #### Aquí lo pongo a esperar 2 segundos, únicamente es para que se pueda ver que está pasando con más calma
         print("The TOP nacionality in the museum is: {0} with {1} unique pieces.\nThe first and last 3 objects in the {0} artwork list are: ".format(nameMajor,str(cantMajor)))
         print(tablaOrden)
-
+        stop_time = time.process_time()
+        elapsed_time_mseg = (stop_time - start_time)*1000
+        print(elapsed_time_mseg)
         
   
 
 #Requrimiento 5
     elif int(inputs[0]) == 6:
+        start_time = time.process_time()
         dpto=input("Escriba el departamento del museo: ")
         print("\n=================Req No. 5 Inputs ====================\n ")
         print("Estimate the cost to transport all artifacts in {} MoMA's Departament . . .\n".format(dpto))
@@ -213,8 +225,12 @@ while True:
         print(controller.precioTransporte(catalog,dpto)[3])
         print("\nThe TOP 5 oldest items to tranport are: ")
         print(controller.precioTransporte(catalog,dpto)[4])
+        stop_time = time.process_time()
+        elapsed_time_mseg = (stop_time - start_time)*1000
+        print(elapsed_time_mseg)
 #Requirimiento 6
     elif int(inputs[0]) == 7:
+        start_time = time.process_time()
         inicio=int(input("Escriba el año inicial: "))
         fin=int(input("Escriba el año final: "))
         area= float(input("Escriba el área disponible en m\u00b2: "))
@@ -231,7 +247,10 @@ while True:
         print("Filling {0} m\u00b2 of the {1} m\u00b2 available.".format(rta[2],area))
         print("The first and last 3 objects in the American artwork list are: \n")
         print(rta[3])
-        
+
+        stop_time = time.process_time()
+        elapsed_time_mseg = (stop_time - start_time)*1000
+        print(elapsed_time_mseg)        
 
 
 
