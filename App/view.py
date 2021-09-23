@@ -26,6 +26,7 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 from time import sleep as s
+import time
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -100,6 +101,7 @@ while True:
 #Requerimiento 1
     elif int(inputs[0]) == 2:
         
+        start_time = time.process_time()
         inicio=int(input("Escriba el año de inicio: "))
         fin=int(input("Escriba el año final: "))
         print("================= Req No. 1 Inputs ==================")
@@ -114,7 +116,9 @@ while True:
         print("There are {0} artist born between {1} and {2}\n\n".format(cantArtists,inicio,fin))
         print("The first and last 3 artists in range are...\n")
         print(tabla)
-
+        stop_time = time.process_time()
+        elapsed_time_mseg = (stop_time - start_time)*1000
+        print(elapsed_time_mseg)
 
 ##Requerimiento 2
     elif int(inputs[0]) == 3:
@@ -143,7 +147,7 @@ while True:
             if size==0:
                 subsize=lt.size(catalog['artworks'])
                 activoSize=False
-            if size<=lt.size(catalog['artworks']):
+            elif size<=lt.size(catalog['artworks']):
                 subsize=size
                 activoSize=False
             else:

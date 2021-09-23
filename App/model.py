@@ -163,9 +163,8 @@ def cronoArtwork(catalog,sublista, inicio, fin):
     artistList=lt.newList()
     FiltredList=lt.newList()
     for artwork in lt.iterator(sublista):
-        #RECORRER EL RANGO MEJOR, LUEGO USAR ISPRESENT. ASÍ SE EVITA RECORRER TOODA LA LISTA.
-        # SE COMIENZA A BUSCAR DESDE EL PRIMER NÚMERO DEL RANGO. HAY MENOR COMPLEJIDAD.  
-        # TODO revisar la complejidad de esto si se recorre fecha por fecha y con un ispresent 
+
+      
         if artwork["DateAcquired"] != '':
             if int(artwork["DateAcquired"].replace('-','')) in range(inicio,fin+1):
 
@@ -187,8 +186,8 @@ def cronoArtwork(catalog,sublista, inicio, fin):
                 if ('purchase' in artwork['CreditLine'].lower()):
                     purchasedCant+=1
 #           Aquí hacemos que el ciclo se rompa porque ya está ordenado, así que es mejor detener el ciclo si se sabe que no hay más después        
-        # elif int((artwork['DateAcquired'].replace('-','')).strip()) > fin: 
-        #     break   
+        elif int((artwork['DateAcquired'].replace('-','')).strip()) > fin: 
+            break   
     
     if lt.isEmpty(FiltredList):
         return "No hay obras de arte en el rango indicado"
@@ -271,7 +270,7 @@ def contadorTecnica(mayor,tecnica):
     
     
             
-#Comienza el Req4.
+#Comienza el Req4.  ELABORADO POR: GERMÁN LEONARDO MORENO CAINABA. COD->202116701
 def ordenNacionalidad(catalog):
     artists = catalog['artists']
     for artwork in lt.iterator(catalog['artworks']):
@@ -279,7 +278,7 @@ def ordenNacionalidad(catalog):
         idArtist = artwork['ConstituentID'].replace('[','').replace(']','').split(',')
         for id in idArtist:
             id=id.strip()
-            pos = lt.isPresent(artists,id)
+            pos = lt.isPresent(artists,id)  
             artist = lt.getElement(artists,pos)
             nation = artist['Nationality']
 
@@ -337,7 +336,6 @@ def addNation(catalog,nation_original,artwork):
 #↑↑↑Aquí termina el req4.↑↑↑
 
 # Req 5
-#TODO retornar todos los valores que se piden en el pdf
 def check_none(artwork,clave):
     if artwork[clave]!='' and artwork[clave]!=None:
         return float(artwork[clave])/100
