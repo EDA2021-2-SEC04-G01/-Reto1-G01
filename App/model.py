@@ -204,7 +204,7 @@ def cronoArtwork(catalog,sublista, inicio, fin):
         return (tabla,lt.size(FiltredList),purchasedCant,cantArtists)
 #↑↑↑Aquí termina el Req2.↑↑↑
 
-#REQ 3
+#REQ 3 ELABORADO POR DANIEL MOLANO - 202012695
 def artistPerTecnique(catalog,nombre):
     
     artistID=None
@@ -214,22 +214,20 @@ def artistPerTecnique(catalog,nombre):
         if nombre in artistName:
             artistID=name['ConstituentID']
             break
-        else:
-            return "No se encontró un artista con ese nombre."
         
-    if artistID != None:
-        diccReturn={}
+    if artistID == None:
+        return "No se encontró un artista con ese nombre."
+    else:
+        diccReturn={'TotalObras':0}
         listTecnica=lt.newList()
         listaArtworkMax=lt.newList()
         listaAllArtworks=lt.newList()
         
         for artWork in lt.iterator(catalog['artworks']):
-            artWorkArtist=artWork['ConstituentID'].replace('[','').replace(']','').split(',')
-            print(type(artWorkArtist))
-            print(type(artistID))
-            
+            artWorkArtist=artWork['ConstituentID'].replace('[','').replace(']','').replace(' ','').split(',')
+                        
             if artistID in artWorkArtist:
-                print('full')
+                
                 mayor={}
                 lt.addLast(listaAllArtworks, artWork['Title'])
                 diccReturn['Obras']=listaAllArtworks
@@ -241,15 +239,11 @@ def artistPerTecnique(catalog,nombre):
                 if artWork['Medium']==diccReturn['Tecnica mayor']:
                     lt.addLast(listaArtworkMax,artWork['Title'])
                     diccReturn['ObrasMayor']=listaArtworkMax
-                print(listaAllArtworks)
-        print(diccReturn)
+                
         return diccReturn
 
 
-#    for position in range(lt.size(listaAllArtworks)):
-#        selectInfo(position,listaAllArtworks,listArtworksEnd,catalog)    
-#    headers = ['ObjectID','Title','Artist(s)','Medium','Dimensions','Date','Department','Classification','URL']
-#    tabla=(tabulate(listArtworksEnd, headers=headers, tablefmt='grid',numalign='center'))
+
 
 
 def contadorTecnica(mayor,tecnica):
