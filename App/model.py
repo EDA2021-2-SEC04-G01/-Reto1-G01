@@ -108,7 +108,7 @@ def sortDates(catalog):
     sa.sort(catalog['artists'],compareFechas)
 
 def sortArtYears(catalog):
-    sa.sort(catalog['artworks'],compareYears)
+    msort.sort(catalog['artworks'],compareYears)
 
 def sortArtworksDates(catalog,cant,method):
 
@@ -125,7 +125,7 @@ def sortNation(nationality):
 
 
 def sortArtPrice(artworks):
-    sa.sort(artworks,comparePrices)
+    msort.sort(artworks,comparePrices)
 
 #Req 1.
 def cronoArtist(catalog, inicio, fin):
@@ -186,8 +186,8 @@ def cronoArtwork(catalog,sublista, inicio, fin):
                 if ('purchase' in artwork['CreditLine'].lower()):
                     purchasedCant+=1
 #           Aquí hacemos que el ciclo se rompa porque ya está ordenado, así que es mejor detener el ciclo si se sabe que no hay más después        
-        elif int((artwork['DateAcquired'].replace('-','')).strip()) > fin: 
-            break   
+            elif int((artwork['DateAcquired'].replace('-','')).strip()) > fin: 
+                break   
     
     if lt.isEmpty(FiltredList):
         return "No hay obras de arte en el rango indicado"
@@ -371,7 +371,7 @@ def precioTransporte(catalog,department):
             for dato in lista:
                 if dato!=0:
                     no_ceros+=1
-            if no_ceros>=2 or circ!=0 or peso!=0:
+            if no_ceros>=2 :
                 
                 prof = cambiar_uno(prof)
                 height = cambiar_uno(height)

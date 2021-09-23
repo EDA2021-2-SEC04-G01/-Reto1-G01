@@ -170,7 +170,7 @@ while True:
 
         stop_time = time.process_time()
         elapsed_time_mseg = (stop_time - start_time)*1000
-        print(''.join("El tiempo usado completo fue",elapsed_time_mseg))
+        print("El tiempo usado completo fue"+str(elapsed_time_mseg))
 
 #Requerimiento 3
     elif int(inputs[0]) == 4:
